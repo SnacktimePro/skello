@@ -1,4 +1,4 @@
-# Easy-Venv
+# Easy Venv
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -7,7 +7,7 @@
 
 ---
 
-## Why Easy-Venv?
+## Why Easy Venv?
 
 Setting up a Python project often involves the same repetitive steps:
 1. Create a virtual environment (`python -m venv .venv`).
@@ -36,7 +36,7 @@ Setting up a Python project often involves the same repetitive steps:
 No installation needed! Just clone the repository or download the `setup_venv.py` file.
 
 ```bash
-git clone https://github.com/your-username/easy-venv.git
+git clone https://github.com/snacktimepro/easy-venv.git
 cd easy-venv
 ```
 
@@ -44,7 +44,7 @@ cd easy-venv
 Install it globally to use from anywhere:
 
 ```bash
-git clone https://github.com/your-username/easy-venv.git
+git clone https://github.com/snacktimepro/easy-venv.git
 cd easy-venv
 pip install -e .
 ```
