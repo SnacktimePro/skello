@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import sys
+import textwrap
 import venv
 from pathlib import Path
 from typing import List
@@ -14,15 +15,15 @@ def parse_args() -> argparse.Namespace:
             "and optionally launch an activated shell."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  %(prog)s                                  # All defaults (current directory, .venv, requirements.txt)
-  %(prog)s -p /path/to/project              # Specify project path only
-  %(prog)s -p /path/to/project -n myenv -r dev-requirements.txt
-                                            # Custom env name & requirements file
-  %(prog)s -p /path/to/project --name production -ncr
-                                            # Full setup with combined flags
-"""
+        epilog=textwrap.dedent("""\
+            Examples:
+              %(prog)s                                  # All defaults (current directory, .venv, requirements.txt)
+              %(prog)s -p /path/to/project              # Specify project path only
+              %(prog)s -p /path/to/project -n myenv -r dev-requirements.txt
+                                                         # Custom env name & requirements file
+              %(prog)s -p /path/to/project --name production -ncr
+                                                         # Full setup with combined flags
+            """)
     )
 
     parser.add_argument(
