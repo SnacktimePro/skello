@@ -2,44 +2,58 @@ import argparse
 import subprocess
 import sys
 import venv
-import os
 from pathlib import Path
 from typing import List
+
 
 def parse_args() -> argparse.Namespace:
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="A script to create a Python virtual environment, upgrade pip, install dependencies, and automatically launch an activated shell.",
-        epilog="Example: python setup_venv.py -p /path/to/project -n myenv -r dev-requirements.txt"
+        description=(
+            "Create a Python virtual environment, upgrade pip, install dependencies, "
+            "and optionally launch an activated shell."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s                                  # All defaults (current directory, .venv, requirements.txt)
+  %(prog)s -p /path/to/project              # Specify project path only
+  %(prog)s -p /path/to/project -n myenv -r dev-requirements.txt
+                                            # Custom env name & requirements file
+  %(prog)s -p /path/to/project --name production -ncr
+                                            # Full setup with combined flags
+"""
     )
+
     parser.add_argument(
         "-p", "--path",
         type=str,
         default=".",
-        help="The target directory path where the venv and requirements file are located (default: current directory)"
+        help="Target directory for the virtual environment and requirements file (default: current directory)"
     )
     parser.add_argument(
         "-n", "--name",
         type=str,
         default=".venv",
-        help="The name of the virtual environment folder (default: .venv)"
+        help="Name of the virtual environment folder (default: .venv)"
     )
     parser.add_argument(
         "-r", "--requirements",
         type=str,
         default="requirements.txt",
-        help="The name of the requirements file (default: requirements.txt)"
+        help="Name of the requirements file (default: requirements.txt)"
     )
     parser.add_argument(
-        "--no-create-requirements",
+        "-ncr", "--no-create-requirements",
         action="store_true",
         help="Skip creating requirements.txt if it doesn't exist"
     )
     parser.add_argument(
-        "--no-auto-shell",
+        "-nas", "--no-auto-shell",
         action="store_true",
         help="Skip automatically launching an activated shell session"
     )
+
     return parser.parse_args()
 
 def get_python_executable(venv_dir: Path) -> Path:
