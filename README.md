@@ -27,8 +27,8 @@ Setting up a Python project often involves the same repetitive steps:
 -   🚀 **Auto-Activation**: Automatically opens a new shell with your environment activated
 -   🖥️ **Cross-Platform**: Works reliably on Windows (PowerShell), macOS, and Linux
 -   📁 **Remote Project Setup**: Work on any project directory from anywhere on your system
--   📝 **Smart Requirements**: Auto-creates `requirements.txt` with helpful TODO comments if missing
--   🛠️ **Customizable**: All options have convenient short flags (`-p`, `-n`, `-r`, `-ncr`, `-nas`)
+-   📝 **Smart Requirements**: Will create `requirements.txt` with helpful TODO comments if specified
+-   🛠️ **Customizable**: All options have convenient short flags (`-p`, `-n`, `-r`, `-s`)
 -   🧘 **Safe**: Validates directories and handles existing environments gracefully
 -   📖 **Beginner-Friendly**: Clear progress indicators and helpful error messages
 
@@ -86,7 +86,7 @@ easy-venv -p /path/to/my/project
 easy-venv -p ~/projects/web-app -n dev -r requirements-dev.txt
 
 # Skip auto-features when needed
-easy-venv -p ~/my-project -ncr -nas  # No auto-requirements, no auto-shell
+easy-venv -p ~/my-project -s  # no auto-shell
 
 # Mix and match
 easy-venv -p "C:\Users\Me\Desktop\my-project" -n production
@@ -96,14 +96,13 @@ easy-venv -p "C:\Users\Me\Desktop\my-project" -n production
 
 ## Command-Line Options
 
-| Option                     | Short  | Default                 | Description                                             |
-| -------------------------- | ------ | ----------------------- | ------------------------------------------------------- |
-| `--path`                   | `-p`   | `.` (current directory) | Target directory containing your project                |
-| `--name`                   | `-n`   | `.venv`                 | Name of the virtual environment folder                  |
-| `--requirements`           | `-r`   | `requirements.txt`      | Name of the requirements file to install from           |
-| `--no-create-requirements` | `-ncr` | False                   | Skip creating requirements.txt if it doesn't exist      |
-| `--no-auto-shell`          | `-nas` | False                   | Skip automatically launching an activated shell session |
-| `--help`                   | `-h`   | -                       | Show help message and exit                              |
+| Option            | Short | Default                 | Description                                             |
+| ----------------- | ----- | ----------------------- | ------------------------------------------------------- |
+| `--path`          | `-p`  | `.` (current directory) | Target directory containing your project                |
+| `--name`          | `-n`  | `.venv`                 | Name of the virtual environment folder                  |
+| `--requirements`  | `-r`  | `requirements.txt`      | Name of the requirements file to install from           |
+| `--no-auto-shell` | `-s`  | False                   | Skip automatically launching an activated shell session |
+| `--help`          | `-h`  | -                       | Show help message and exit                              |
 
 ---
 
@@ -139,7 +138,7 @@ easy-venv -p ~/my-project -n prod-env -r requirements-prod.txt
 
 ```bash
 # Skip auto-shell for automation
-easy-venv -p /path/to/project -nas
+easy-venv -p /path/to/project -s
 ```
 
 ---
@@ -181,7 +180,7 @@ $ easy-venv -p ~/my-awesome-project
 
 ## Auto-Generated Requirements Template
 
-When `requirements.txt` is missing, Easy-Venv creates:
+When `requirements.txt` is missing, Easy-Venv creates with -r, --create-requirements:
 
 ```txt
 # TODO: Add your project dependencies here
@@ -233,13 +232,13 @@ Easy-Venv handles edge cases gracefully:
 
 ### 📁 **Organization Tips**
 
--   **Separate requirements**: `requirements-dev.txt`, `requirements-prod.txt`, etc.
+-   **Separate requirements**: `-r requirements-dev.txt`, `-r requirements-prod.txt`, etc.
 -   **Consistent naming**: Use the same venv names across similar projects
 -   **Clean structure**: Let Easy-Venv auto-generate requirements.txt to start clean
 
 ### 🚀 **Power User Tips**
 
--   **Automation friendly**: Use `-nas` flag in scripts and CI/CD
+-   **Automation friendly**: Use `-s` flag in scripts and CI/CD
 -   **Quick setup**: `easy-venv && code .` for instant VSCode setup
 -   **Batch processing**: Set up multiple projects with shell loops
 
@@ -301,7 +300,7 @@ If you encounter any issues:
 
 -   ✨ **Auto-shell activation**: Automatically launches activated shell
 -   📝 **Smart requirements**: Auto-creates requirements.txt with helpful template
--   🚀 **Short flags**: All options have convenient short versions (`-p`, `-n`, `-r`, `-ncr`, `-nas`)
+-   🚀 **Short flags**: All options have convenient short versions (`-p`, `-n`, `-r`, `-s`)
 -   🖥️ **Better cross-platform**: Improved Windows PowerShell and Unix shell support
 -   📦 **Installable package**: Available via `pip install -e .` with `pyproject.toml`
 
