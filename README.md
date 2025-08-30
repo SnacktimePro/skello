@@ -48,14 +48,14 @@ pip install -e .
 
 After installation, use `easy-venv` command from anywhere on your system!
 
-### Option 2: Standalone Script
+### Option 2: Direct Usage
 
 Download and run directly:
 
 ```bash
 git clone https://github.com/snacktimepro/easy-venv.git
 cd easy-venv
-python easy_venv/main.py -p /path/to/project
+python -m easy_venv -p /path/to/project
 ```
 
 ---
@@ -67,7 +67,7 @@ python easy_venv/main.py -p /path/to/project
 Simply run in any directory and Easy-Venv will:
 
 1. Create `.venv` and upgrade pip
-2. Auto-create `requirements.txt` if missing (with helpful TODO)
+2. Create `requirements.txt` if specified (with helpful TODO)
 3. Install any existing dependencies
 4. Launch a new shell with everything activated!
 

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "easy-venv"
 version = "1.0.0"
 authors = [
-    {name = "SnacktimePro", email = "No-reply@example.com"},
+    {name = "SnacktimePro", email = "no-reply@example.com"},
 ]
 description = "A simple, cross-platform script to quickly create Python virtual environments with automatic activation"
 readme = "README.md"
@@ -29,15 +29,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 keywords = ["virtual-environment", "venv", "python", "development", "automation", "pip"]
-
-[project.urls]
-"Homepage" = "https://github.com/SnacktimePro/easy-venv"
-"Bug Reports" = "https://github.com/SnacktimePro/easy-venv/issues"
-"Source" = "https://github.com/SnacktimePro/easy-venv"
-"Documentation" = "https://github.com/SnacktimePro/easy-venv#readme"
-
-[project.scripts]
-easy-venv = "easy_venv.main:main"
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
@@ -47,11 +39,17 @@ dev = [
     "mypy>=0.900",
 ]
 
-[tool.setuptools]
-packages = ["easy_venv"]
+[project.scripts]
+easy-venv = "easy_venv.cli:main"
 
-[tool.setuptools.package-data]
-easy_venv = ["py.typed"]
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+"Homepage" = "https://github.com/SnacktimePro/easy-venv"
+"Bug Reports" = "https://github.com/SnacktimePro/easy-venv/issues"
+"Source" = "https://github.com/SnacktimePro/easy-venv"
+"Documentation" = "https://github.com/SnacktimePro/easy-venv#readme"
 
 [tool.black]
 line-length = 88
