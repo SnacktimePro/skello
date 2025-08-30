@@ -3,7 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**A simple, cross-platform script to quickly create a Python virtual environment, upgrade pip, install dependencies, and automatically launch an activated shell - all from anywhere on your system!**
+**A simple, cross-platform script to quickly create a Python virtual environment, upgrade pip, install dependencies from multiple file formats, and automatically launch an activated shell - all from anywhere on your system!**
 
 ---
 
@@ -14,7 +14,7 @@ Setting up a Python project often involves the same repetitive steps:
 1. Create a virtual environment (`python -m venv .venv`).
 2. Activate it.
 3. Upgrade pip (`pip install --upgrade pip`).
-4. Install dependencies (`pip install -r requirements.txt`).
+4. Install dependencies from various file formats (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.).
 5. Navigate to your project directory.
 
 **Easy-Venv** automates ALL these steps into a single command and automatically launches you into an activated shell session, ready to start coding immediately!
@@ -27,7 +27,8 @@ Setting up a Python project often involves the same repetitive steps:
 -   🚀 **Auto-Activation**: Automatically opens a new shell with your environment activated
 -   🖥️ **Cross-Platform**: Works reliably on Windows (PowerShell), macOS, and Linux
 -   📁 **Remote Project Setup**: Work on any project directory from anywhere on your system
--   📝 **Smart Requirements**: Will create `requirements.txt` with helpful TODO comments if specified
+-   📦 **Multi-Format Support**: Detects and installs from `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
+-   📝 **Optional Template Generation**: Create `requirements.txt` template with flag when needed
 -   🛠️ **Customizable**: All options have convenient short flags (`-p`, `-n`, `-r`, `-s`)
 -   🧘 **Safe**: Validates directories and handles existing environments gracefully
 -   📖 **Beginner-Friendly**: Clear progress indicators and helpful error messages
@@ -67,12 +68,11 @@ python -m easy_venv -p /path/to/project
 Simply run in any directory and Easy-Venv will:
 
 1. Create `.venv` and upgrade pip
-2. Create `requirements.txt` if specified (with helpful TODO)
-3. Install any existing dependencies
-4. Launch a new shell with everything activated!
+2. Detect and install dependencies from existing files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
+3. Launch a new shell with everything activated!
 
 ```bash
-# Creates everything and launches activated shell
+# Creates venv and launches activated shell
 easy-venv
 
 # Work on any project from anywhere
@@ -83,7 +83,13 @@ easy-venv -p /path/to/my/project
 
 ```bash
 # All the power with convenient short options
-easy-venv -p ~/projects/web-app -n dev -r requirements-dev.txt
+easy-venv -p ~/projects/web-app -n dev
+
+# Create requirements.txt template when needed
+easy-venv -p ~/my-project -r
+
+# Create custom requirements file
+easy-venv -p ~/my-project -r dev-requirements.txt
 
 # Skip auto-features when needed
 easy-venv -p ~/my-project -s  # no auto-shell
@@ -96,13 +102,13 @@ easy-venv -p "C:\Users\Me\Desktop\my-project" -n production
 
 ## Command-Line Options
 
-| Option            | Short | Default                 | Description                                             |
-| ----------------- | ----- | ----------------------- | ------------------------------------------------------- |
-| `--path`          | `-p`  | `.` (current directory) | Target directory containing your project                |
-| `--name`          | `-n`  | `.venv`                 | Name of the virtual environment folder                  |
-| `--requirements`  | `-r`  | `requirements.txt`      | Name of the requirements file to install from           |
-| `--no-auto-shell` | `-s`  | False                   | Skip automatically launching an activated shell session |
-| `--help`          | `-h`  | -                       | Show help message and exit                              |
+| Option                  | Short | Default                 | Description                                                                 |
+| ----------------------- | ----- | ----------------------- | --------------------------------------------------------------------------- |
+| `--path`                | `-p`  | `.` (current directory) | Target directory containing your project                                    |
+| `--name`                | `-n`  | `.venv`                 | Name of the virtual environment folder                                      |
+| `--create-requirements` | `-r`  | None                    | Create requirements file (default: requirements.txt) or specify custom name |
+| `--no-auto-shell`       | `-s`  | False                   | Skip automatically launching an activated shell session                     |
+| `--help`                | `-h`  | -                       | Show help message and exit                                                  |
 
 ---
 
@@ -111,10 +117,18 @@ easy-venv -p "C:\Users\Me\Desktop\my-project" -n production
 ### Scenario 1: New Project Setup
 
 ```bash
-# Start a new project - Easy-Venv handles everything!
+# Start a new project
 mkdir my-new-project
 easy-venv -p my-new-project
-# → Creates venv, auto-generates requirements.txt, launches activated shell
+# → Creates venv, detects existing dependency files, launches activated shell
+
+# Create with requirements.txt template
+easy-venv -p my-new-project -r
+# → Also generates requirements.txt template for manual editing
+
+# Create with custom requirements file name
+easy-venv -p my-new-project -r dev-requirements.txt
+# → Creates dev-requirements.txt template
 ```
 
 ### Scenario 2: Existing Project
@@ -122,7 +136,8 @@ easy-venv -p my-new-project
 ```bash
 # Setup existing project with dependencies
 easy-venv -p ~/projects/existing-app
-# → Uses existing requirements.txt, installs deps, launches activated shell
+# → Auto-detects pyproject.toml, requirements.txt, Pipfile, etc.
+# → Installs dependencies, launches activated shell
 ```
 
 ### Scenario 3: Multiple Environments
@@ -148,9 +163,23 @@ easy-venv -p /path/to/project -s
 1. **🎯 Validates** the target directory exists and is accessible
 2. **🌱 Creates** a virtual environment (skips if already exists)
 3. **🔧 Upgrades** pip to the latest version
-4. **📝 Auto-creates** `requirements.txt` with TODO template if missing
-5. **📦 Installs** dependencies from requirements file (if present and not empty)
-6. **🚀 Launches** a new shell session with the environment activated and correct directory!
+4. **📦 Detects** dependency files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
+5. **⬇️ Installs** dependencies from detected files (if present and not empty)
+6. **📝 Optionally creates** requirements file template (with `-r` flag)
+7. **🚀 Launches** a new shell session with the environment activated and correct directory!
+
+---
+
+## Dependency File Detection
+
+Easy-Venv automatically detects and installs from these dependency files in order of preference:
+
+1. **`pyproject.toml`** - Modern Python packaging standard
+2. **`requirements.txt`** - Traditional pip requirements
+3. **`Pipfile`** - Pipenv format
+4. **Other formats** - Additional formats as supported
+
+You can override auto-detection by specifying a file with the `-r` flag.
 
 ---
 
@@ -162,7 +191,8 @@ $ easy-venv -p ~/my-awesome-project
 🎯 Target directory: /home/user/my-awesome-project
 🌱 Creating virtual environment in '/home/user/my-awesome-project/.venv'...
 🔧 Upgrading pip...
-📝 Created requirements.txt (auto-generated because it was missing)
+📦 Found pyproject.toml - installing dependencies...
+📦 Installing dependencies from pyproject.toml...
 
 🎉 Setup complete!
 🚀 Automatically launching activated shell session...
@@ -178,13 +208,23 @@ $ easy-venv -p ~/my-awesome-project
 
 ---
 
-## Auto-Generated Requirements Template
+## Requirements Template Generation
 
-When `requirements.txt` is missing, Easy-Venv creates with -r, --create-requirements:
+When you need a requirements file template, use the `-r` flag:
+
+```bash
+# Create default requirements.txt
+easy-venv -p my-project -r
+
+# Create custom requirements file
+easy-venv -p my-project -r dev-requirements.txt
+```
+
+This creates a template like:
 
 ```txt
 # TODO: Add your project dependencies here
-# This file was auto-created by Easy-Venv because it was missing
+# This file was auto-created by Easy-Venv
 # Example: requests>=2.28.0
 
 ```
@@ -198,8 +238,8 @@ Clean, simple, and ready for you to add your dependencies!
 Easy-Venv handles edge cases gracefully:
 
 -   **Missing target directory**: Clear error message with path validation
--   **Missing requirements file**: Auto-creates with helpful template (unless `-ncr`)
--   **Empty requirements file**: Informative message, skips installation
+-   **No dependency files found**: Informative message, skips installation
+-   **Empty dependency files**: Informative message, skips installation
 -   **Existing virtual environment**: Skips creation, proceeds with upgrades and installation
 -   **Permission issues**: Clear error messages with suggested solutions
 -   **Shell launch failures**: Falls back to manual activation instructions
@@ -232,9 +272,9 @@ Easy-Venv handles edge cases gracefully:
 
 ### 📁 **Organization Tips**
 
+-   **Modern dependency files**: Use `pyproject.toml` for new projects
 -   **Separate requirements**: `-r requirements-dev.txt`, `-r requirements-prod.txt`, etc.
 -   **Consistent naming**: Use the same venv names across similar projects
--   **Clean structure**: Let Easy-Venv auto-generate requirements.txt to start clean
 
 ### 🚀 **Power User Tips**
 
@@ -295,6 +335,13 @@ If you encounter any issues:
 ---
 
 ## Changelog
+
+### v1.1.0
+
+-   📦 **Multi-format dependency detection**: Auto-detects `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
+-   📝 **Optional template generation**: Requirements.txt template now requires `--create-requirements` flag
+-   🔍 **Smart dependency handling**: No longer auto-creates files by default
+-   🚀 **Improved workflow**: Focus on existing projects with better file detection
 
 ### v1.0.0
 
