@@ -9,11 +9,33 @@ and optionally launch an activated shell.
 import argparse
 import textwrap
 from pathlib import Path
+from typing import List
 
 from .file_manager import FileManager
 from .venv_manager import VirtualEnvironmentManager
 from .dependency_handler import DependencyHandler
 from .shell_launcher import ShellLauncher
+
+# Your mapping of all possible inputs to a standardized name
+OPTION_MAP = {
+    # requirements.txt
+    'r': 'requirements', 'req': 'requirements', 'requirements': 'requirements',
+    # pyproject.toml
+    'p': 'pyproject', 'toml': 'pyproject', 'pyproject': 'pyproject',
+    # .gitignore
+    'g': 'gitignore', 'git': 'gitignore', 'gitignore': 'gitignore',
+    # README.md
+    'md': 'readme', 'read': 'readme', 'readme': 'readme',
+    # CHANGELOG.md
+    'c': 'changelog', 'log': 'changelog', 'changelog': 'changelog', 
+    # LICENSE
+    'l': 'license', 'lic': 'license', 'license': 'license',
+    # All files
+    '*': 'all', 'all': 'all',
+}
+
+# Define what 'all' expands to. We get the unique values from the map, excluding 'all' itself.
+ALL_FILES = sorted(list(set(v for v in OPTION_MAP.values() if v != 'all')))
 
 
 def parse_args() -> argparse.Namespace:
@@ -22,16 +44,26 @@ def parse_args() -> argparse.Namespace:
         prog="easy-venv",
         description=(
             "Create a Python virtual environment, upgrade pip, install dependencies, "
-            "and optionally launch an activated shell."
+            "and optionally scaffold project files - all in one command."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
             Examples:
-            %(prog)s                                  # All defaults (current directory, .venv)
+            %(prog)s                                  # Basic venv setup (current directory, .venv)
             %(prog)s -p /path/to/project              # Specify project path only
             %(prog)s -p /path/to/project -n myenv     # Custom env name
-            %(prog)s -p /path/to/project -r           # Create requirements.txt if no dependencies found
-            %(prog)s -p /path/to/project -s           # Skip auto shell launch
+            %(prog)s -c all                           # Create all project files
+            %(prog)s -c r g readme                    # Create requirements, gitignore, readme
+            %(prog)s -p /path/to/project -c all -s    # Full setup but skip auto shell
+            
+            Create flags (can be combined with commas):
+            r/req/requirements    →  requirements.txt
+            p/toml/pyproject      →  pyproject.toml  
+            g/git/gitignore       →  .gitignore
+            md/read/readme        →  README.md
+            c/log/changelog       →  CHANGELOG.md
+            l/mit/license         →  LICENSE
+            */all                 →  All project files
             """)
     )
 
@@ -39,21 +71,24 @@ def parse_args() -> argparse.Namespace:
         "-p", "--path",
         type=str,
         default=".",
-        help="Target directory for the virtual environment and requirements file (default: current directory)"
+        help="Target directory for the virtual environment and project files (default: current directory)"
     )
+    
     parser.add_argument(
         "-n", "--name",
         type=str,
         default=".venv",
         help="Name of the virtual environment folder (default: .venv)"
     )
+    
     parser.add_argument(
-        "-r", "--create-requirements",
-        nargs="?",
-        const="requirements.txt",   # default if they don't pass a filename
-        help="Create a basic requirements file (default: requirements.txt). "
-            "Optionally pass a filename, e.g. --create-requirements dev-requirements.txt"
+        "-c", "--create",
+        nargs='*',  # 👈 Accept 0 or more space-separated values
+        choices=OPTION_MAP.keys(),  # 👈 Validate against the allowed keys
+        metavar="FILE_TYPE", # 👈 A clean name for the help message
+        help=f"Create project files. Options: {' '.join(ALL_FILES)}. Use 'all' for all files."
     )
+    
     parser.add_argument(
         "-s", "--no-auto-shell",
         action="store_true",
@@ -61,6 +96,24 @@ def parse_args() -> argparse.Namespace:
     )
 
     return parser.parse_args()
+
+def get_files_to_create(create_args: List[str]) -> List[str]:
+    """
+    Takes the list of file aliases from argparse and returns a clean list
+    of standardized file type names.
+    """
+    if not create_args:
+        return []
+
+    # Use a set for efficiency and to automatically handle duplicates
+    # (e.g., if user types "-c r requirements")
+    standardized_choices = {OPTION_MAP[arg] for arg in create_args}
+
+    # If 'all' is in the set, immediately return the full list
+    if 'all' in standardized_choices:
+        return ALL_FILES
+
+    return sorted(list(standardized_choices))
 
 
 def main():
@@ -78,7 +131,13 @@ def main():
     # Execute workflow
     venv_manager.create_environment()
     venv_manager.upgrade_pip()
-    dependency_handler.detect_and_install(args.create_requirements)
+    dependency_handler.detect_and_install()
+     # Parse create options if provided
+    if args.create:
+        files = get_files_to_create(args.create)
+        # Create project files if requested
+        if files:
+            file_manager.create_project_files(files)
     
     print("\n🎉 Setup complete!")
     

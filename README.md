@@ -3,7 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**A simple, cross-platform script to quickly create a Python virtual environment, upgrade pip, install dependencies from multiple file formats, and automatically launch an activated shell - all from anywhere on your system!**
+**A complete Python project initialization tool - create virtual environments, install dependencies, and scaffold modern project structure in seconds!**
 
 ---
 
@@ -15,7 +15,8 @@ Setting up a Python project often involves the same repetitive steps:
 2. Activate it.
 3. Upgrade pip (`pip install --upgrade pip`).
 4. Install dependencies from various file formats (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.).
-5. Navigate to your project directory.
+5. Create project files (README, .gitignore, LICENSE, etc.).
+6. Navigate to your project directory.
 
 **Easy-Venv** automates ALL these steps into a single command and automatically launches you into an activated shell session, ready to start coding immediately!
 
@@ -24,12 +25,14 @@ Setting up a Python project often involves the same repetitive steps:
 ## Features
 
 -   ✅ **One-Command Setup**: Creates venv, upgrades pip, installs dependencies, AND launches activated shell
+-   🏗️ **Modern Project Scaffolding**: Optionally generate complete project structure with `--create`
 -   🚀 **Auto-Activation**: Automatically opens a new shell with your environment activated
 -   🖥️ **Cross-Platform**: Works reliably on Windows (PowerShell), macOS, and Linux
 -   📁 **Remote Project Setup**: Work on any project directory from anywhere on your system
 -   📦 **Multi-Format Support**: Detects and installs from `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
--   📝 **Optional Template Generation**: Create `requirements.txt` template with flag when needed
--   🛠️ **Customizable**: All options have convenient short flags (`-p`, `-n`, `-r`, `-s`)
+-   🔧 **Modern Standards**: Prefers `pyproject.toml` over legacy `requirements.txt`
+-   📝 **Smart File Creation**: Only creates files that don't already exist - never overwrites
+-   🛠️ **Fully Optional**: Every feature is optional - use what you need, skip what you don't
 -   🧘 **Safe**: Validates directories and handles existing environments gracefully
 -   📖 **Beginner-Friendly**: Clear progress indicators and helpful error messages
 
@@ -79,81 +82,134 @@ easy-venv
 easy-venv -p /path/to/my/project
 ```
 
-### Advanced Usage with Short Flags
+### Project Scaffolding - The Real Power! 🏗️
+
+Create complete, modern Python projects instantly:
 
 ```bash
-# All the power with convenient short options
-easy-venv -p ~/projects/web-app -n dev
+# Create a complete modern Python project (power user style)
+easy-venv -c *
+# → Creates: pyproject.toml, .gitignore, README.md, CHANGELOG.md, LICENSE, and venv!
 
-# Create requirements.txt template when needed
-easy-venv -p ~/my-project -r
+# Ultra-short power user combinations
+easy-venv -c p g l          # pyproject, gitignore, license
+easy-venv -c l g c          # license, gitignore, changelog
+easy-venv -c p md c         # pyproject, readme, changelog
 
-# Create custom requirements file
-easy-venv -p ~/my-project -r dev-requirements.txt
+# Medium-length for readability
+easy-venv -c toml git lic   # same as above but clearer
+easy-venv -c lic git log    # license, gitignore, changelog
 
-# Skip auto-features when needed
-easy-venv -p ~/my-project -s  # no auto-shell
+# Full names for ultimate clarity
+easy-venv -c pyproject gitignore license
 
-# Mix and match
-easy-venv -p "C:\Users\Me\Desktop\my-project" -n production
+# Mix and match styles as you prefer
+easy-venv -p ~/my-project -n dev -c *
+```
+
+### Advanced Usage
+
+```bash
+# Legacy requirements.txt support
+easy-venv -c r g            # requirements, gitignore (short)
+easy-venv -c req git        # requirements, gitignore (medium)
+
+# Custom project path with specific files
+easy-venv -p ~/projects/web-app -c p md l    # pyproject, readme, license
+
+# Skip auto-shell launch for automation
+easy-venv -c * -s           # all files, no shell
+
+# Just create venv without any files
+easy-venv -p ~/existing-project
 ```
 
 ---
 
 ## Command-Line Options
 
-| Option                  | Short | Default                 | Description                                                                 |
-| ----------------------- | ----- | ----------------------- | --------------------------------------------------------------------------- |
-| `--path`                | `-p`  | `.` (current directory) | Target directory containing your project                                    |
-| `--name`                | `-n`  | `.venv`                 | Name of the virtual environment folder                                      |
-| `--create-requirements` | `-r`  | None                    | Create requirements file (default: requirements.txt) or specify custom name |
-| `--no-auto-shell`       | `-s`  | False                   | Skip automatically launching an activated shell session                     |
-| `--help`                | `-h`  | -                       | Show help message and exit                                                  |
+| Option            | Short | Default                 | Description                                             |
+| ----------------- | ----- | ----------------------- | ------------------------------------------------------- |
+| `--path`          | `-p`  | `.` (current directory) | Target directory for the virtual environment and files  |
+| `--name`          | `-n`  | `.venv`                 | Name of the virtual environment folder                  |
+| `--create`        | `-c`  | None                    | Create project files (see options below)                |
+| `--no-auto-shell` | `-s`  | False                   | Skip automatically launching an activated shell session |
+| `--help`          | `-h`  | -                       | Show help message and exit                              |
+
+### Project File Creation Options
+
+| Short | Medium | Full           | Creates            | Description                    |
+| ----- | ------ | -------------- | ------------------ | ------------------------------ |
+| `p`   | `toml` | `pyproject`    | `pyproject.toml`   | Modern Python package config   |
+| `r`   | `req`  | `requirements` | `requirements.txt` | Legacy pip requirements        |
+| `g`   | `git`  | `gitignore`    | `.gitignore`       | Git ignore rules for Python    |
+| `md`  | `read` | `readme`       | `README.md`        | Project documentation          |
+| `c`   | `log`  | `changelog`    | `CHANGELOG.md`     | Keep a Changelog format        |
+| `l`   | `lic`  | `license`      | `LICENSE`          | MIT license with current year  |
+| `*`   | `all`  | `all`          | All modern files   | Everything except requirements |
 
 ---
 
 ## Real-World Examples
 
-### Scenario 1: New Project Setup
+### Scenario 1: Brand New Project - Full Setup
 
 ```bash
-# Start a new project
-mkdir my-new-project
-easy-venv -p my-new-project
-# → Creates venv, detects existing dependency files, launches activated shell
+# Create everything for a new Python project (power user)
+mkdir my-awesome-app
+easy-venv -p my-awesome-app -c *
 
-# Create with requirements.txt template
-easy-venv -p my-new-project -r
-# → Also generates requirements.txt template for manual editing
+# Same thing with readable medium style
+easy-venv -p my-awesome-app -c toml git read log lic
 
-# Create with custom requirements file name
-easy-venv -p my-new-project -r dev-requirements.txt
-# → Creates dev-requirements.txt template
+# Result: Complete project with:
+# ✅ Virtual environment (.venv)
+# ✅ Modern packaging (pyproject.toml)
+# ✅ Git ignore (.gitignore)
+# ✅ Documentation (README.md)
+# ✅ Changelog (CHANGELOG.md)
+# ✅ License (LICENSE)
+# ✅ Activated shell ready to go!
 ```
 
-### Scenario 2: Existing Project
+### Scenario 2: Existing Project - Just Environment
 
 ```bash
-# Setup existing project with dependencies
+# Setup venv for existing project with dependencies
 easy-venv -p ~/projects/existing-app
-# → Auto-detects pyproject.toml, requirements.txt, Pipfile, etc.
-# → Installs dependencies, launches activated shell
+# → Detects pyproject.toml/requirements.txt, installs deps, activates
 ```
 
-### Scenario 3: Multiple Environments
+### Scenario 3: Selective File Creation
 
 ```bash
-# Different environments for the same project
-easy-venv -p ~/my-project -n dev-env -r requirements-dev.txt
-easy-venv -p ~/my-project -n test-env -r requirements-test.txt
-easy-venv -p ~/my-project -n prod-env -r requirements-prod.txt
+# Just add missing essentials to existing project (power user)
+easy-venv -p ~/my-project -c l g          # license, gitignore
+
+# Add modern packaging to legacy project (medium style)
+easy-venv -p ~/old-project -c toml        # pyproject.toml
+
+# Create documentation files only (mixed styles)
+easy-venv -p ~/my-lib -c md log           # readme, changelog
 ```
 
-### Scenario 4: CI/CD or Automated Scripts
+### Scenario 4: Multiple Environments
 
 ```bash
-# Skip auto-shell for automation
-easy-venv -p /path/to/project -s
+# Different environments for same project
+easy-venv -p ~/my-project -n dev -c p     # pyproject only
+easy-venv -p ~/my-project -n test -c r    # requirements only
+easy-venv -p ~/my-project -n prod         # just venv
+```
+
+### Scenario 5: CI/CD and Automation
+
+```bash
+# Automated setup without shell launch
+easy-venv -p /path/to/project -c * -s     # all files, no shell
+
+# Just environment setup for containers
+easy-venv -s                              # venv only, no shell
 ```
 
 ---
@@ -163,73 +219,108 @@ easy-venv -p /path/to/project -s
 1. **🎯 Validates** the target directory exists and is accessible
 2. **🌱 Creates** a virtual environment (skips if already exists)
 3. **🔧 Upgrades** pip to the latest version
-4. **📦 Detects** dependency files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
-5. **⬇️ Installs** dependencies from detected files (if present and not empty)
-6. **📝 Optionally creates** requirements file template (with `-r` flag)
+4. **📝 Creates** project files (only if specified and don't exist)
+5. **📦 Detects** dependency files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
+6. **⬇️ Installs** dependencies from detected files (if present and not empty)
 7. **🚀 Launches** a new shell session with the environment activated and correct directory!
 
 ---
 
-## Dependency File Detection
+## Smart Project File Logic
 
-Easy-Venv automatically detects and installs from these dependency files in order of preference:
+Easy-Venv makes intelligent decisions about file creation:
 
-1. **`pyproject.toml`** - Modern Python packaging standard
-2. **`requirements.txt`** - Traditional pip requirements
+### Dependency File Priority
+
+1. **`pyproject.toml`** - Modern Python packaging standard (preferred)
+2. **`requirements.txt`** - Legacy pip requirements (for compatibility)
 3. **`Pipfile`** - Pipenv format
-4. **Other formats** - Additional formats as supported
+4. **Other formats** - Additional formats as detected
 
-You can override auto-detection by specifying a file with the `-r` flag.
+### Smart Behaviors
+
+-   **Prevents conflicts**: Won't create `requirements.txt` if creating `pyproject.toml`
+-   **Respects existing**: Never overwrites existing files
+-   **Modern by default**: `*` and `all` create `pyproject.toml`, not `requirements.txt`
+-   **Clear messaging**: Explains why files are created or skipped
 
 ---
 
-## Example Session
+## Example Sessions
+
+### Complete New Project Setup
 
 ```bash
-$ easy-venv -p ~/my-awesome-project
+$ easy-venv -p ~/my-new-api -c all
 
-🎯 Target directory: /home/user/my-awesome-project
-🌱 Creating virtual environment in '/home/user/my-awesome-project/.venv'...
+🎯 Target directory: /home/user/my-new-api
+🌱 Creating virtual environment in '/home/user/my-new-api/.venv'...
+🔧 Upgrading pip...
+📝 Created project files: pyproject.toml, .gitignore, README.md, CHANGELOG.md, LICENSE
+
+🎉 Setup complete!
+🚀 Automatically launching activated shell session...
+🎉 Virtual environment activated in new shell!
+📁 Current directory: /home/user/my-new-api
+🐍 Virtual environment: /home/user/my-new-api/.venv
+✨ You can now work in your activated environment. Type 'exit' to return.
+
+(.venv) user@computer:~/my-new-api$ # Ready to code!
+```
+
+### Existing Project with Dependencies
+
+```bash
+$ easy-venv -p ~/existing-project
+
+🎯 Target directory: /home/user/existing-project
+🌱 Creating virtual environment in '/home/user/existing-project/.venv'...
 🔧 Upgrading pip...
 📦 Found pyproject.toml - installing dependencies...
 📦 Installing dependencies from pyproject.toml...
 
 🎉 Setup complete!
 🚀 Automatically launching activated shell session...
-🎉 Virtual environment activated in new shell!
-📁 Current directory: /home/user/my-awesome-project
-🐍 Virtual environment: /home/user/my-awesome-project/.venv
-✨ You can now work in your activated environment. Type 'exit' to return.
-
-(.venv) user@computer:~/my-awesome-project$ pip install requests
-(.venv) user@computer:~/my-awesome-project$ python my_script.py
-# You're ready to code! 🎉
+(.venv) user@computer:~/existing-project$ # Dependencies installed and ready!
 ```
 
 ---
 
-## Requirements Template Generation
+## Generated File Templates
 
-When you need a requirements file template, use the `-r` flag:
+### pyproject.toml (Modern Standard)
 
-```bash
-# Create default requirements.txt
-easy-venv -p my-project -r
+-   Complete modern Python packaging configuration
+-   Build system setup with hatchling
+-   Development dependencies included
+-   Tool configurations (black, isort, pytest)
+-   Ready for `pip install -e .`
 
-# Create custom requirements file
-easy-venv -p my-project -r dev-requirements.txt
-```
+### .gitignore (Comprehensive)
 
-This creates a template like:
+-   Python-specific ignore patterns
+-   Virtual environment exclusions
+-   IDE and OS file exclusions
+-   Build and distribution ignores
 
-```txt
-# TODO: Add your project dependencies here
-# This file was auto-created by Easy-Venv
-# Example: requests>=2.28.0
+### README.md (Professional)
 
-```
+-   Project title with badges
+-   Installation instructions
+-   Usage examples
+-   Contributing guidelines
 
-Clean, simple, and ready for you to add your dependencies!
+### CHANGELOG.md (Keep a Changelog Format)
+
+-   Semantic versioning ready
+-   Organized by release sections
+-   Standard change categories
+
+### LICENSE (MIT with Current Year)
+
+-   MIT license text
+-   Current year automatically inserted
+-   Placeholder for author name
 
 ---
 
@@ -238,9 +329,10 @@ Clean, simple, and ready for you to add your dependencies!
 Easy-Venv handles edge cases gracefully:
 
 -   **Missing target directory**: Clear error message with path validation
--   **No dependency files found**: Informative message, skips installation
+-   **File conflicts**: Never overwrites existing files, shows what was skipped
+-   **Invalid file options**: Validates create options and shows available choices
 -   **Empty dependency files**: Informative message, skips installation
--   **Existing virtual environment**: Skips creation, proceeds with upgrades and installation
+-   **Existing virtual environment**: Skips creation, proceeds with other steps
 -   **Permission issues**: Clear error messages with suggested solutions
 -   **Shell launch failures**: Falls back to manual activation instructions
 
@@ -266,21 +358,58 @@ Easy-Venv handles edge cases gracefully:
 
 ### 🎯 **Workflow Tips**
 
--   **One command setup**: Just run `easy-venv` in any project directory
+-   **Complete setup**: Use `easy-venv -c all` for new projects
+-   **Selective creation**: Add missing files to existing projects with specific flags
+-   **Modern standards**: Prefer `pyproject` over `requirements` for new projects
 -   **Remote management**: Keep Easy-Venv installed globally, work on projects anywhere
--   **Multiple environments**: Use descriptive names (`-n dev`, `-n testing`, `-n prod`)
 
 ### 📁 **Organization Tips**
 
--   **Modern dependency files**: Use `pyproject.toml` for new projects
--   **Separate requirements**: `-r requirements-dev.txt`, `-r requirements-prod.txt`, etc.
--   **Consistent naming**: Use the same venv names across similar projects
+-   **Consistent structure**: Use `all` for uniform project layouts
+-   **Documentation first**: Always include `readme` and `license`
+-   **Version control ready**: Include `gitignore` from the start
+-   **Professional setup**: Add `changelog` for release tracking
 
 ### 🚀 **Power User Tips**
 
 -   **Automation friendly**: Use `-s` flag in scripts and CI/CD
--   **Quick setup**: `easy-venv && code .` for instant VSCode setup
+-   **Quick iterations**: `easy-venv -c pyproject && code .` for instant development
 -   **Batch processing**: Set up multiple projects with shell loops
+-   **Template projects**: Create template directories and scaffold them with Easy-Venv
+
+---
+
+## Why This Approach Rocks
+
+### Traditional Way (Multiple Commands)
+
+```bash
+mkdir my-project && cd my-project
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Unix: source .venv/bin/activate
+pip install --upgrade pip
+# Create pyproject.toml manually...
+# Create .gitignore manually...
+# Create README.md manually...
+# Create LICENSE manually...
+# ...5-10 minutes later you can start coding
+```
+
+### Easy-Venv Way (One Command)
+
+```bash
+easy-venv -p my-project -c *
+# 🎉 Done! Activated shell, all files created, ready to code in 10 seconds
+```
+
+### The Best Part: It's All Optional!
+
+-   **Just need a venv?** → `easy-venv`
+-   **Need project files?** → `easy-venv -c *`
+-   **Existing project?** → `easy-venv -p existing-project`
+-   **Specific files only?** → `easy-venv -c l g` (license, gitignore)
+-   **Automation script?** → `easy-venv -c * -s`
 
 ---
 
@@ -299,7 +428,7 @@ Easy-Venv handles edge cases gracefully:
 | **Global Install** | `pip install -e .`           | Best for daily use   |
 | **User Install**   | `pip install -e . --user`    | No admin permissions |
 | **Virtual Env**    | `pip install -e .` (in venv) | Development/testing  |
-| **Direct Run**     | `python easy_venv/main.py`   | One-time use         |
+| **Direct Run**     | `python -m easy_venv`        | One-time use         |
 
 ---
 
@@ -318,7 +447,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 ```bash
 git clone https://github.com/snacktimepro/easy-venv.git
 cd easy-venv
-pip install -e .[dev]  # Installs development dependencies
+easy-venv -c all  # Use Easy-Venv to set up Easy-Venv! 🎉
 ```
 
 ---
@@ -336,10 +465,20 @@ If you encounter any issues:
 
 ## Changelog
 
+### v2.0.0 - The Complete Project Initialization Release
+
+-   🏗️ **Complete project scaffolding**: Add `--create` flag with support for `pyproject.toml`, `.gitignore`, `README.md`, `CHANGELOG.md`, `LICENSE`
+-   🔧 **Modern Python standards**: Prefer `pyproject.toml` over `requirements.txt` by default
+-   🧠 **Smart file logic**: Prevents conflicts, never overwrites, intelligent defaults
+-   📝 **Professional templates**: High-quality file templates following current best practices
+-   🎯 **Flexible options**: Space-separated arguments with validation and aliases
+-   ⚡ **Zero to production**: Complete project setup in one command
+-   🛡️ **Enhanced safety**: Comprehensive validation and error handling
+
 ### v1.1.0
 
 -   📦 **Multi-format dependency detection**: Auto-detects `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
--   📝 **Optional template generation**: Requirements.txt template now requires `--create-requirements` flag
+-   📝 **Optional template generation**: Requirements.txt template now requires flag
 -   🔍 **Smart dependency handling**: No longer auto-creates files by default
 -   🚀 **Improved workflow**: Focus on existing projects with better file detection
 
@@ -347,12 +486,12 @@ If you encounter any issues:
 
 -   ✨ **Auto-shell activation**: Automatically launches activated shell
 -   📝 **Smart requirements**: Auto-creates requirements.txt with helpful template
--   🚀 **Short flags**: All options have convenient short versions (`-p`, `-n`, `-r`, `-s`)
+-   🚀 **Short flags**: All options have convenient short versions
 -   🖥️ **Better cross-platform**: Improved Windows PowerShell and Unix shell support
--   📦 **Installable package**: Available via `pip install -e .` with `pyproject.toml`
+-   📦 **Installable package**: Available via `pip install -e .`
 
 ---
 
 _Made with ❤️ to make Python development setup effortless_
 
-**Ready to code in seconds, not minutes! 🚀**
+**From zero to fully-configured Python project in seconds! 🚀**

@@ -23,7 +23,7 @@ class DependencyHandler:
         self.file_manager = file_manager
         self._command_runner = CommandRunner()
     
-    def detect_and_install(self, requirements_filename: Optional[str] = None) -> None:
+    def detect_and_install(self) -> None:
         """
         Detects dependency files and installs dependencies accordingly.
         
@@ -41,8 +41,6 @@ class DependencyHandler:
             self._install_from_pipfile(dependency_files['Pipfile'])
         elif dependency_files['environment.yml']:
             self._handle_conda_env()
-        elif requirements_filename:
-            self._create_requirements_file(requirements_filename)
         else:
             self._handle_no_dependencies()
     
@@ -97,12 +95,6 @@ class DependencyHandler:
     def _handle_conda_env(self) -> None:
         """Handles conda environment.yml files."""
         print(f"⚠️  Found environment.yml (conda file) - this tool works with pip. Consider creating pyproject.toml or requirements.txt")
-    
-    def _create_requirements_file(self, filename: str) -> None:
-        """Creates a new requirements file if requested."""
-        print(f"📝 Creating {filename}...")
-        if self.file_manager.create_requirements_file(filename):
-            print(f"✅ Created {filename} - you can now add your dependencies")
     
     def _handle_no_dependencies(self) -> None:
         """Handles case when no dependency files are found."""
