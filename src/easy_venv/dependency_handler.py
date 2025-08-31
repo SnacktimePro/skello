@@ -100,7 +100,7 @@ class DependencyHandler:
         """Handles case when no dependency files are found."""
         print(f"📭 No dependency files found - skipping package installation")
         print(f"   Looked for: pyproject.toml, requirements.txt, Pipfile, environment.yml")
-        print(f"   Use --create-requirements [filename] to generate a requirements file")
+        print(f"   Use --create p to generate a pyproject file")
     
     def install_package(self, package_name: str, dev: bool = False) -> None:
         """

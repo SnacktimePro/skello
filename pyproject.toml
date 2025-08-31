@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "easy-venv"
-version = "2.0.0"
+version = "2.0.2"
 authors = [
     {name = "SnacktimePro", email = "no-reply@example.com"},
 ]
-description = "A simple, cross-platform script to quickly create Python virtual environments with automatic activation"
+description = "A complete Python project initialization tool - create virtual environments, install dependencies, and scaffold modern project structure in seconds!"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.7"
@@ -44,6 +44,9 @@ easy-venv = "easy_venv.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+easy_venv = ["templates/*"]
 
 [project.urls]
 "Homepage" = "https://github.com/SnacktimePro/easy-venv"

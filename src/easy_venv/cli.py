@@ -30,6 +30,8 @@ OPTION_MAP = {
     'c': 'changelog', 'log': 'changelog', 'changelog': 'changelog', 
     # LICENSE
     'l': 'license', 'lic': 'license', 'license': 'license',
+    # MAIN STRUCTURE
+    'm': 'main', 'main': 'main', 'structure': 'structure',
     # All files
     '*': 'all', 'all': 'all',
 }
