@@ -465,30 +465,7 @@ If you encounter any issues:
 
 ## Changelog
 
-### v2.0.0 - The Complete Project Initialization Release
-
--   🏗️ **Complete project scaffolding**: Add `--create` flag with support for `pyproject.toml`, `.gitignore`, `README.md`, `CHANGELOG.md`, `LICENSE`
--   🔧 **Modern Python standards**: Prefer `pyproject.toml` over `requirements.txt` by default
--   🧠 **Smart file logic**: Prevents conflicts, never overwrites, intelligent defaults
--   📝 **Professional templates**: High-quality file templates following current best practices
--   🎯 **Flexible options**: Space-separated arguments with validation and aliases
--   ⚡ **Zero to production**: Complete project setup in one command
--   🛡️ **Enhanced safety**: Comprehensive validation and error handling
-
-### v1.1.0
-
--   📦 **Multi-format dependency detection**: Auto-detects `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
--   📝 **Optional template generation**: Requirements.txt template now requires flag
--   🔍 **Smart dependency handling**: No longer auto-creates files by default
--   🚀 **Improved workflow**: Focus on existing projects with better file detection
-
-### v1.0.0
-
--   ✨ **Auto-shell activation**: Automatically launches activated shell
--   📝 **Smart requirements**: Auto-creates requirements.txt with helpful template
--   🚀 **Short flags**: All options have convenient short versions
--   🖥️ **Better cross-platform**: Improved Windows PowerShell and Unix shell support
--   📦 **Installable package**: Available via `pip install -e .`
+See [CHANGELOG.md](./CHANGELOG.md) for a full list of changes.
 
 ---
 
