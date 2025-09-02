@@ -2,42 +2,19 @@
 """
 Easy-Venv CLI Entry Point
 
-Create a Python virtual environment, upgrade pip, install dependencies,
-and optionally launch an activated shell.
+Create a Python virtual environment, upgrade pip, install dependencies, 
+scaffold project files and optionally launch an activated shell.
 """
 
 import argparse
 import textwrap
 from pathlib import Path
-from typing import List
 
-from .file_manager import FileManager
+from .scaffold_manger import ScaffoldManager
 from .venv_manager import VirtualEnvironmentManager
 from .dependency_handler import DependencyHandler
 from .shell_launcher import ShellLauncher
-
-# Your mapping of all possible inputs to a standardized name
-OPTION_MAP = {
-    # requirements.txt
-    'r': 'requirements', 'req': 'requirements', 'requirements': 'requirements',
-    # pyproject.toml
-    'p': 'pyproject', 'toml': 'pyproject', 'pyproject': 'pyproject',
-    # .gitignore
-    'g': 'gitignore', 'git': 'gitignore', 'gitignore': 'gitignore',
-    # README.md
-    'md': 'readme', 'read': 'readme', 'readme': 'readme',
-    # CHANGELOG.md
-    'c': 'changelog', 'log': 'changelog', 'changelog': 'changelog', 
-    # LICENSE
-    'l': 'license', 'lic': 'license', 'license': 'license',
-    # MAIN STRUCTURE
-    'm': 'main', 'main': 'main', 'structure': 'structure',
-    # All files
-    '*': 'all', 'all': 'all',
-}
-
-# Define what 'all' expands to. We get the unique values from the map, excluding 'all' itself.
-ALL_FILES = sorted(list(set(v for v in OPTION_MAP.values() if v != 'all')))
+from .models.scaffold_context import ScaffoldContext
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,18 +31,22 @@ def parse_args() -> argparse.Namespace:
             %(prog)s                                  # Basic venv setup (current directory, .venv)
             %(prog)s -p /path/to/project              # Specify project path only
             %(prog)s -p /path/to/project -n myenv     # Custom env name
-            %(prog)s -c all                           # Create all project files
-            %(prog)s -c r g readme                    # Create requirements, gitignore, readme
-            %(prog)s -p /path/to/project -c all -s    # Full setup but skip auto shell
+            %(prog)s -c all                           # Create all project files + full structure
+            %(prog)s -c r g read main                 # Create requirements, gitignore, readme + main structure
+            %(prog)s -p /path/to/project -c full -s   # Full structure but skip auto shell
             
-            Create flags (can be combined with commas):
-            r/req/requirements    →  requirements.txt
-            p/toml/pyproject      →  pyproject.toml  
-            g/git/gitignore       →  .gitignore
-            md/read/readme        →  README.md
-            c/log/changelog       →  CHANGELOG.md
-            l/mit/license         →  LICENSE
-            */all                 →  All project files
+            File types:
+            r/req       →  requirements.txt
+            p/toml      →  pyproject.toml  
+            g/git       →  .gitignore
+            md/read     →  README.md
+            ch/log      →  CHANGELOG.md
+            l/lic       →  LICENSE
+            
+            Structure templates:
+            m/main                →  Creates src/package/main.py structure
+            f/full                →  Creates complete project with tests
+            */all                 →  All files + full structure
             """)
     )
 
@@ -85,10 +66,9 @@ def parse_args() -> argparse.Namespace:
     
     parser.add_argument(
         "-c", "--create",
-        nargs='*',  # 👈 Accept 0 or more space-separated values
-        choices=OPTION_MAP.keys(),  # 👈 Validate against the allowed keys
-        metavar="FILE_TYPE", # 👈 A clean name for the help message
-        help=f"Create project files. Options: {' '.join(ALL_FILES)}. Use 'all' for all files."
+        nargs='*',
+        metavar="SPEC",
+        help="Create files and structures using 'TYPE' or 'TYPE:ARG1:ARG2' syntax."
     )
     
     parser.add_argument(
@@ -99,47 +79,33 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
-def get_files_to_create(create_args: List[str]) -> List[str]:
-    """
-    Takes the list of file aliases from argparse and returns a clean list
-    of standardized file type names.
-    """
-    if not create_args:
-        return []
-
-    # Use a set for efficiency and to automatically handle duplicates
-    # (e.g., if user types "-c r requirements")
-    standardized_choices = {OPTION_MAP[arg] for arg in create_args}
-
-    # If 'all' is in the set, immediately return the full list
-    if 'all' in standardized_choices:
-        return ALL_FILES
-
-    return sorted(list(standardized_choices))
-
 
 def main():
     """Main CLI entry point."""
     args = parse_args()
     
+    # Create project context from CLI args
+    target_path = Path(args.path).resolve()
+    scaffold_context = ScaffoldContext.build(target_path, args.create)
+    
     # Initialize managers
-    file_manager = FileManager(Path(args.path))
-    venv_manager = VirtualEnvironmentManager(file_manager.target_dir, args.name)
-    dependency_handler = DependencyHandler(venv_manager, file_manager)
+    venv_manager = VirtualEnvironmentManager(scaffold_context.target_dir, args.name)
+    dependency_handler = DependencyHandler(venv_manager, scaffold_context.directory_snapshot)
     shell_launcher = ShellLauncher(venv_manager)
     
-    print(f"🎯 Target directory: {file_manager.target_dir}")
-    
+    print(f"🎯 Target directory: {scaffold_context.target_dir}")
+
     # Execute workflow
     venv_manager.create_environment()
     venv_manager.upgrade_pip()
     dependency_handler.detect_and_install()
-     # Parse create options if provided
+    
+    # Scaffold project if specifications provided
     if args.create:
-        files = get_files_to_create(args.create)
-        # Create project files if requested
-        if files:
-            file_manager.create_project_files(files)
+        print("\n📋 Project Configuration:")
+        print(scaffold_context.project_summary())
+        scaffold_manager = ScaffoldManager()
+        scaffold_manager.execute_plan(scaffold_context)
     
     print("\n🎉 Setup complete!")
     

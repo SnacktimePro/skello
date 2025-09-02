@@ -5,6 +5,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Changelog
+
+## 2.02 - 2025-09-02
+
+### Added
+
+-   **License System**: Complete license management system with support for multiple license types
+    -   Added `LicenseHelper` class for centralized license operations
+    -   Support for 7 license types: MIT, Apache 2.0, BSD 3-Clause, GPL v3, LGPL v3, MPL 2.0, and Unlicense
+    -   License templates for all supported types:
+        -   `LICENSE_MIT.tmpl`
+        -   `LICENSE_APACHE.tmpl`
+        -   `LICENSE_BSD.tmpl`
+        -   `LICENSE_GPL.tmpl`
+        -   `LICENSE_LGPL.tmpl`
+        -   `LICENSE_MPL.tmpl`
+        -   `LICENSE_UNLICENSE.tmpl`
+    -   Automatic license detection from existing LICENSE files
+    -   Dynamic license classifier detection for pyproject.toml
+
+### Enhanced
+
+-   **CLI License Options**: Enhanced license creation with flexible syntax
+    -   `l:apache:author_name` - Create Apache license with specific author
+    -   `l:mit` - Create MIT license with default author placeholder
+    -   `l` - Create MIT license (default)
+    -   Defaults to MIT license when no type specified
+-   **Requirements File Naming**: Added ability to specify custom requirements filename
+
+    -   `r:custom_name` - Create requirements file with custom name
+    -   `r` - Create standard requirements.txt
+
+-   **Author Name Integration**: License files now properly integrate author names
+    -   Author name from CLI arguments
+    -   Fallback to "TODO: Add your name" placeholder
+    -   Current year automatically inserted
+
+### Changed
+
+-   **CLI Interface**: Expanded CLI argument parsing (`cli.py`)
+
+    -   More robust parsing for license and requirements options
+    -   Better error handling for malformed arguments
+    -   Improved help text and usage examples
+
+-   **Template Updates**: Updated existing templates for better consistency
+    -   Modified `LICENSE_MIT.tmpl` for improved formatting
+    -   Updated `pyproject.toml.tmpl` for dynamic license classifier
+
+### Removed
+
+-   `src/easy_venv/file_manager.py` - split into scaffold_manager.py and directory_snapshot.py
+
+### Technical Improvements
+
+-   Added proper license classifier mapping for all supported license types
+-   Implemented fallback chain: specified license → detected license → MIT default
+-   Enhanced template rendering system with better variable substitution
+-   Improved code organization with dedicated license helper class
+
+### Files Modified
+
+-   `src/easy_venv/cli.py` - Enhanced CLI parsing and license options
+-   `src/easy_venv/templates/LICENSE_MIT.tmpl` - Template formatting improvements
+-   `src/easy_venv/templates/pyproject.toml.tmpl` - Dynamic classifier support
+-   `src/easy_venv/dependency_handler.py` - New files support
+
+### Files Added
+
+-   `src/easy_venv/directory_snapshot.py` - Take a snapshot of the target directory
+-   `src/easy_venv/models/scaffold_context.py` - Hold the scaffold context
+-   `src/easy_venv/scaffold_manager.py` - New way to handle project scaffolding
+-   `src/easy_venv/license_helper.py` - New license management utility class
+-   `src/easy_venv/templates/LICENSE_APACHE.tmpl` - Apache 2.0 license template
+-   `src/easy_venv/templates/LICENSE_BSD.tmpl` - BSD 3-Clause license template
+-   `src/easy_venv/templates/LICENSE_GPL.tmpl` - GPL v3 license template
+-   `src/easy_venv/templates/LICENSE_LGPL.tmpl` - LGPL v3 license template
+-   `src/easy_venv/templates/LICENSE_MPL.tmpl` - MPL 2.0 license template
+-   `src/easy_venv/templates/LICENSE_UNLICENSE.tmpl` - Unlicense template
+
 ## [2.0.1] - 2025-09-01
 
 ### Added

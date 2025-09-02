@@ -138,15 +138,17 @@ easy-venv -p ~/existing-project
 
 ### Project File Creation Options
 
-| Short | Medium | Full           | Creates            | Description                    |
-| ----- | ------ | -------------- | ------------------ | ------------------------------ |
-| `p`   | `toml` | `pyproject`    | `pyproject.toml`   | Modern Python package config   |
-| `r`   | `req`  | `requirements` | `requirements.txt` | Legacy pip requirements        |
-| `g`   | `git`  | `gitignore`    | `.gitignore`       | Git ignore rules for Python    |
-| `md`  | `read` | `readme`       | `README.md`        | Project documentation          |
-| `c`   | `log`  | `changelog`    | `CHANGELOG.md`     | Keep a Changelog format        |
-| `l`   | `lic`  | `license`      | `LICENSE`          | MIT license with current year  |
-| `*`   | `all`  | `all`          | All modern files   | Everything except requirements |
+| Short | Medium | Creates              | Description                        |
+| ----- | ------ | -------------------- | ---------------------------------- |
+| `p`   | `toml` | `pyproject.toml`     | Modern Python package config       |
+| `r`   | `req`  | `requirements.txt`   | Legacy pip requirements            |
+| `g`   | `git`  | `.gitignore`         | Git ignore rules for Python        |
+| `md`  | `read` | `README.md`          | Project documentation              |
+| `ch`  | `log`  | `CHANGELOG.md`       | Keep a Changelog format            |
+| `l`   | `lic`  | `LICENSE`            | MIT license with current year      |
+| `m`   | `main` | `main.py`            | Creates Python package layout      |
+| `f`   | `full` | `main.py + tests.py` | Creates Full Python package layout |
+| `*`   | `all`  | All modern files     | Everything except requirements     |
 
 ---
 

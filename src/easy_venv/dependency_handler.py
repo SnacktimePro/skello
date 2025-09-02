@@ -1,9 +1,8 @@
 """Dependency detection and installation for easy-venv."""
 
 from pathlib import Path
-from typing import Optional
 
-from .file_manager import FileManager
+from .directory_snapshot import DirectorySnapshot
 from .utils import CommandRunner
 from .venv_manager import VirtualEnvironmentManager
 
@@ -11,18 +10,18 @@ from .venv_manager import VirtualEnvironmentManager
 class DependencyHandler:
     """Handles detection and installation of project dependencies."""
     
-    def __init__(self, venv_manager: VirtualEnvironmentManager, file_manager: FileManager):
+    def __init__(self, venv_manager: VirtualEnvironmentManager, snapshot: DirectorySnapshot):
         """
         Initialize dependency handler.
         
         Args:
             venv_manager: Virtual environment manager instance
-            file_manager: File manager instance
+            snapshot: Directory Snapshot instance
         """
         self.venv_manager = venv_manager
-        self.file_manager = file_manager
+        self.snapshot = snapshot
         self._command_runner = CommandRunner()
-    
+       
     def detect_and_install(self) -> None:
         """
         Detects dependency files and installs dependencies accordingly.
@@ -30,7 +29,7 @@ class DependencyHandler:
         Args:
             requirements_filename: Name of requirements file to create if none found
         """
-        dependency_files = self.file_manager.find_dependency_files()
+        dependency_files = self.snapshot.find_dependency_files()
         
         # Check if dependency files exist in order of preference
         if dependency_files['pyproject.toml']:
@@ -55,11 +54,11 @@ class DependencyHandler:
             self.venv_manager.run_in_venv(["-m", "pip", "install", "-e", "."])
         except Exception as e:
             print(f"⚠️  Warning: Failed to install from pyproject.toml. Trying pip install anyway...")
-            self.venv_manager.run_in_venv(["-m", "pip", "install", "-e", str(self.file_manager.target_dir)])
+            self.venv_manager.run_in_venv(["-m", "pip", "install", "-e", str(self.snapshot.target_dir)])
     
     def _install_from_requirements(self, requirements_file: Path) -> None:
         """Attempts to install dependencies from requirements.txt file."""
-        if self.file_manager.is_file_empty(requirements_file):
+        if self.snapshot.is_file_empty(requirements_file):
             print(f"🤔 Found empty requirements.txt - nothing to install")
             return
         
@@ -74,12 +73,12 @@ class DependencyHandler:
             # Try to use pipenv to generate requirements
             result = self._command_runner.run_command_with_output(
                 ["pipenv", "requirements"], 
-                cwd=self.file_manager.target_dir
+                cwd=self.snapshot.target_dir
             )
             
             if result.returncode == 0:
                 # Create temporary requirements file from pipenv output
-                temp_req = self.file_manager.target_dir / ".temp_requirements.txt"
+                temp_req = self.snapshot.target_dir / ".temp_requirements.txt"
                 with open(temp_req, 'w') as f:
                     f.write(result.stdout)
                 
@@ -125,7 +124,7 @@ class DependencyHandler:
             print(f"❌ Requirements file not found: {requirements_file}")
             return
         
-        if self.file_manager.is_file_empty(requirements_file):
+        if self.snapshot.is_file_empty(requirements_file):
             print(f"🤔 Requirements file is empty: {requirements_file}")
             return
         
