@@ -72,7 +72,8 @@ Simply run in any directory and Easy-Venv will:
 
 1. Create `.venv` and upgrade pip
 2. Detect and install dependencies from existing files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
-3. Launch a new shell with everything activated!
+3. (Optional)Scaffold modern project structure if requested
+4. Launch a new shell with everything activated!
 
 ```bash
 # Creates venv and launches activated shell

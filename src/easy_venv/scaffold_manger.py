@@ -1,12 +1,12 @@
 import string
 import textwrap
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from importlib import resources
 from pathlib import Path
 from datetime import datetime, date
 
 from .license_helper import LicenseHelper
-from .models.config import FileSpec, FileType, StructureTemplate
+from .models.scaffolding_types import FileType, FileRequest, StructureTemplate
 from .models.scaffold_context import ScaffoldContext
 
 
@@ -36,21 +36,21 @@ class ScaffoldManager:
                 skipped_files.append(name)
 
         # 2. Create individual files (except pyproject.toml)
-        pyproject_spec = None
-        for file_type, spec in context.files_to_create.items():
+        pyproject_request = None
+        for file_type, request in context.files_to_create.items():
             if file_type == FileType.PYPROJECT:
-                pyproject_spec = spec  # Handle last
+                pyproject_request = request  # Handle last
                 continue
                 
-            created, filename = self._create_file(file_type, spec, context)
+            created, filename = self._create_file(file_type, request, context)
             if created:
                 created_files.append(filename)
             else:
                 skipped_files.append(filename)
 
         # 3. Create pyproject.toml last (so it sees final state)
-        if pyproject_spec:
-            created, filename = self._create_pyproject_toml(pyproject_spec, context)
+        if pyproject_request:
+            created, filename = self._create_pyproject_toml(pyproject_request, context)
             if created:
                 created_files.append(filename)
             else:
@@ -59,45 +59,45 @@ class ScaffoldManager:
         # 4. Report results
         self._report_summary(created_files, skipped_files)
 
-    def _create_file(self, file_type: FileType, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_file(self, file_type: FileType, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Dispatch file creation to appropriate method."""
         if file_type == FileType.REQUIREMENTS:
-            return self._create_requirements(spec, context)
+            return self._create_requirements(request, context)
         elif file_type == FileType.GITIGNORE:
-            return self._create_gitignore(spec, context)
+            return self._create_gitignore(request, context)
         elif file_type == FileType.README:
-            return self._create_readme(spec, context)
+            return self._create_readme(request, context)
         elif file_type == FileType.LICENSE:
-            return self._create_license(spec, context)
+            return self._create_license(request, context)
         elif file_type == FileType.CHANGELOG:
-            return self._create_changelog(spec, context)
+            return self._create_changelog(request, context)
         else:
             return False, f"unknown-{file_type.value}"
 
     # --- File Creation Methods ---
     
-    def _create_requirements(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_requirements(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create requirements.txt file."""
-        filename = spec.get('filename', 'requirements.txt')
+        filename = request.get('filename', 'requirements.txt')
         content = self._get_template_content("requirements.txt.tmpl")
         
         if self._write_file(context.target_dir / filename, content):
             return True, filename
         return False, filename
     
-    def _create_gitignore(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_gitignore(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create .gitignore file."""
-        filename = spec.get('filename', '.gitignore')
-        template = spec.get('template', 'gitignore.tmpl')
+        filename = request.get('filename', '.gitignore')
+        template = request.get('template', 'gitignore.tmpl')
         content = self._get_template_content(template)
         
         if self._write_file(context.target_dir / filename, content):
             return True, filename
         return False, filename
     
-    def _create_readme(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_readme(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create README.md file."""
-        filename = spec.get('filename', 'README.md')
+        filename = request.get('filename', 'README.md')
         project_title = context.project_name.replace('-', ' ').replace('_', ' ').title()
         
         content = self._get_template_content(
@@ -111,11 +111,11 @@ class ScaffoldManager:
             return True, filename
         return False, filename
     
-    def _create_license(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_license(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create LICENSE file."""
-        filename = spec.get('filename', 'LICENSE')
-        license_type = spec.get('type', 'mit')
-        author = spec.get('author', 'TODO: Add your name')
+        filename = request.get('filename', 'LICENSE')
+        license_type = request.get('type', 'mit')
+        author = request.get('author', 'TODO: Add your name')
         
         license_info = LicenseHelper.get_license_info(license_type)
         template_vars = {
@@ -129,9 +129,9 @@ class ScaffoldManager:
             return True, filename
         return False, filename
     
-    def _create_changelog(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_changelog(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create CHANGELOG.md file."""
-        filename = spec.get('filename', 'CHANGELOG.md')
+        filename = request.get('filename', 'CHANGELOG.md')
         
         # Build features list based on what will be created
         features = []
@@ -162,7 +162,7 @@ class ScaffoldManager:
             return True, filename
         return False, filename
     
-    def _create_pyproject_toml(self, spec: FileSpec, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_pyproject_toml(self, request: FileRequest, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create pyproject.toml file."""
         filename = "pyproject.toml"
         sections = self._build_pyproject_sections(context)
@@ -233,7 +233,7 @@ class ScaffoldManager:
 
     # --- Structure Creation Methods ---
     
-    def _create_main_structure(self, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_main_structure(self, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create src/package/main.py structure."""
         package_dir = context.target_dir / "src" / context.project_package
         main_file = package_dir / "main.py"
@@ -250,7 +250,7 @@ class ScaffoldManager:
         
         return True, "src/main.py structure"
         
-    def _create_full_structure(self, context: ScaffoldContext) -> tuple[bool, str]:
+    def _create_full_structure(self, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create complete project structure with src/ and tests/."""
         # Create main structure first
         created_main = self._create_main_structure(context)[0]

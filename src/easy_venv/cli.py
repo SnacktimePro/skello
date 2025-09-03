@@ -10,11 +10,11 @@ import argparse
 import textwrap
 from pathlib import Path
 
+from .models.cli_handler import CLIHandler
 from .scaffold_manger import ScaffoldManager
 from .venv_manager import VirtualEnvironmentManager
 from .dependency_handler import DependencyHandler
 from .shell_launcher import ShellLauncher
-from .models.scaffold_context import ScaffoldContext
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,6 +33,8 @@ def parse_args() -> argparse.Namespace:
             %(prog)s -p /path/to/project -n myenv     # Custom env name
             %(prog)s -c all                           # Create all project files + full structure
             %(prog)s -c r g read main                 # Create requirements, gitignore, readme + main structure
+            %(prog)s -c l:apache:Your Name            # Create an Apache license with your name
+            %(prog)s -c r:dev-requirements.txt        # Create a requirements file named dev-requirements.txt
             %(prog)s -p /path/to/project -c full -s   # Full structure but skip auto shell
             
             File types:
@@ -86,14 +88,14 @@ def main():
     
     # Create project context from CLI args
     target_path = Path(args.path).resolve()
-    scaffold_context = ScaffoldContext.build(target_path, args.create)
+    cli_handler = CLIHandler.from_cli(target_path, args.create)
     
     # Initialize managers
-    venv_manager = VirtualEnvironmentManager(scaffold_context.target_dir, args.name)
-    dependency_handler = DependencyHandler(venv_manager, scaffold_context.directory_snapshot)
+    venv_manager = VirtualEnvironmentManager(cli_handler.target_dir, args.name)
+    dependency_handler = DependencyHandler(cli_handler.target_dir, venv_manager)
     shell_launcher = ShellLauncher(venv_manager)
     
-    print(f"🎯 Target directory: {scaffold_context.target_dir}")
+    print(f"🎯 Target directory: {cli_handler.target_dir}")
 
     # Execute workflow
     venv_manager.create_environment()
@@ -102,6 +104,7 @@ def main():
     
     # Scaffold project if specifications provided
     if args.create:
+        scaffold_context = cli_handler.build_context()
         print("\n📋 Project Configuration:")
         print(scaffold_context.project_summary())
         scaffold_manager = ScaffoldManager()

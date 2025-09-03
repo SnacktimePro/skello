@@ -38,7 +38,8 @@ class DirectorySnapshot:
         """Check if file exists in snapshot."""
         return filename in self.existing_files
     
-    def find_dependency_files(self) -> Dict[str, Optional[Path]]:
+    @classmethod
+    def find_dependency_files(self, target_dir: Path) -> Dict[str, Optional[Path]]:
         """
         Searches for common dependency files in the target directory.
         
@@ -46,10 +47,10 @@ class DirectorySnapshot:
             Dictionary mapping file types to their paths (or None if not found)
         """
         dependency_files = {
-            'pyproject.toml': self.target_dir / "pyproject.toml",
-            'requirements.txt': self.target_dir / "requirements.txt", 
-            'Pipfile': self.target_dir / "Pipfile",
-            'environment.yml': self.target_dir / "environment.yml"
+            'pyproject.toml': target_dir / "pyproject.toml",
+            'requirements.txt': target_dir / "requirements.txt", 
+            'Pipfile': target_dir / "Pipfile",
+            'environment.yml': target_dir / "environment.yml"
         }
         
         return {
@@ -57,13 +58,15 @@ class DirectorySnapshot:
             for name, path in dependency_files.items()
         }
     
+    @classmethod
     def get_file_size(self, file_path: Path) -> int:
         """Gets the size of a file in bytes."""
         try:
             return file_path.stat().st_size if file_path.exists() else 0
         except OSError:
             return 0
-    
+        
+    @classmethod
     def is_file_empty(self, file_path: Path) -> bool:
         """Checks if a file is empty (0 bytes)."""
         return self.get_file_size(file_path) == 0

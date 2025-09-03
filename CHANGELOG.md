@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
+## 2.03 - 2025-09-03
+
+### Added
+
+-   **CLIHandler** (new main entry point, replaces `FileSpec`)
+    -   Owns project metadata (`target_dir`, `project_name`, `project_package`)
+    -   Provides `from_cli()` as main constructor from CLI args
+    -   Centralizes all CLI parsing logic
+    -   `build_context()` creates the immutable `ScaffoldContext`
+-   **scaffolding_types.py**
+    -   New module containing enums and the `FileRequest` dataclass
+    -   No local imports for clean separation of types
+
+### Changed
+
+-   **FileRequest** (simplified from `FileSpec`)
+    -   Now a pure data class holding `file_type` and `options`
+    -   All parsing/logic removed (moved to `CLIHandler`)
+-   **ScaffoldContext**
+    -   Now fully immutable and execution-focused
+    -   Project metadata removed (lives in `CLIHandler`)
+    -   Contains only execution plan details and current state
+-   **ScaffoldManager**
+    -   Updated to use `FileRequest` instead of `FileSpec`
+    -   Renamed parameters from `spec` → `request`
+    -   Updated type hints (`FileSpec` → `FileRequest`, `tuple` → `Tuple`)
+    -   No logic changes needed — seamless transition
+
+### Technical Improvements
+
+-   Clearer separation of responsibilities:
+    -   **CLIHandler** handles CLI parsing and context creation
+    -   **FileRequest** is a simple data container
+    -   **ScaffoldContext** defines the immutable execution plan
+    -   **ScaffoldManager** executes the plan
+-   Codebase is now more maintainable and consistent with the new architecture
+
+### Files Modified
+
+-   `src/easy_venv/scaffold_manager.py` — Updated to use `FileRequest` and improved type hints
+
+### Files Added
+
+-   `src/easy_venv/models/scaffolding_types.py` — Contains enums and the `FileRequest` dataclass
+-   `src/easy_venv/models/cli_handler.py` — New main entry point (`CLIHandler`)
+
+### Removed
+
+-   `src/easy_venv/models/config.py` - No longer need with cli_handler.py
+
 ## 2.02 - 2025-09-02
 
 ### Added
