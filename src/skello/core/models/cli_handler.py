@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from .scaffold_context import ScaffoldContext
 from .scaffolding_types import FileRequest, FileType, StructureTemplate
-from ..directory_snapshot import DirectorySnapshot
+from ...utils.directory_snapshot import DirectorySnapshot
 
 # ==============================================================================
 # CLI Handler - Entry Point

@@ -1,343 +1,302 @@
-# Easy-Venv
+# Skello
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**A complete Python project initialization tool - create virtual environments, install dependencies, and scaffold modern project structure in seconds!**
+**The friendliest way to bootstrap modern Python projects - from zero to fully-structured, ready-to-code project in seconds! 🚀**
 
 ---
 
-## Why Easy-Venv?
+## Why Skello?
 
-Setting up a Python project often involves the same repetitive steps:
+Starting a new Python project shouldn't take 10+ minutes of setup. You know the drill:
 
-1. Create a virtual environment (`python -m venv .venv`).
-2. Activate it.
-3. Upgrade pip (`pip install --upgrade pip`).
-4. Install dependencies from various file formats (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.).
-5. Create project files (README, .gitignore, LICENSE, etc.).
-6. Navigate to your project directory.
+1. Create folders (`src/`, `tests/`)
+2. Set up virtual environment
+3. Create project files (`pyproject.toml`, `README.md`, `.gitignore`, `LICENSE`)
+4. Configure packaging structure
+5. Initialize documentation
+6. Finally... start coding
 
-**Easy-Venv** automates ALL these steps into a single command and automatically launches you into an activated shell session, ready to start coding immediately!
+**Skello** eliminates ALL these steps with a single command, giving you a complete, modern Python project structure instantly!
 
 ---
 
-## Features
+## What Makes Skello Special?
 
--   ✅ **One-Command Setup**: Creates venv, upgrades pip, installs dependencies, AND launches activated shell
--   🏗️ **Modern Project Scaffolding**: Optionally generate complete project structure with `--create`
--   🚀 **Auto-Activation**: Automatically opens a new shell with your environment activated
--   🖥️ **Cross-Platform**: Works reliably on Windows (PowerShell), macOS, and Linux
--   📁 **Remote Project Setup**: Work on any project directory from anywhere on your system
--   📦 **Multi-Format Support**: Detects and installs from `pyproject.toml`, `requirements.txt`, `Pipfile`, and more
--   🔧 **Modern Standards**: Prefers `pyproject.toml` over legacy `requirements.txt`
--   📝 **Smart File Creation**: Only creates files that don't already exist - never overwrites
--   🛠️ **Fully Optional**: Every feature is optional - use what you need, skip what you don't
--   🧘 **Safe**: Validates directories and handles existing environments gracefully
--   📖 **Beginner-Friendly**: Clear progress indicators and helpful error messages
+-   ✨ **Complete Project Skeleton**: Full folder structure with `src/`, `tests/`, and all essential files
+-   🚀 **Zero Configuration**: Works perfectly out-of-the-box with sensible defaults
+-   🏗️ **Modern Standards**: Creates `pyproject.toml`-based projects following current best practices
+-   🎯 **Instant Productivity**: Drop into an activated shell, ready to code immediately
+-   🌍 **Cross-Platform**: Reliable on Windows (PowerShell), macOS, and Linux
+-   📦 **Smart Dependencies**: Auto-detects and installs from existing dependency files
+-   🔧 **Flexible**: Every feature is optional - use what you need
+-   🛡️ **Safe**: Never overwrites existing files, validates everything
 
 ---
 
 ## Installation
 
-### Option 1: Global Installation (Recommended)
+### Recommended: Global Installation
 
-Install once and use from anywhere:
+Install once, use anywhere:
 
 ```bash
-git clone https://github.com/snacktimepro/easy-venv.git
-cd easy-venv
+git clone https://github.com/snacktimepro/skello.git
+cd skello
 pip install -e .
 ```
 
-After installation, use `easy-venv` command from anywhere on your system!
+Now use `skello` command from anywhere on your system!
 
-### Option 2: Direct Usage
-
-Download and run directly:
+### Alternative: Direct Usage
 
 ```bash
-git clone https://github.com/snacktimepro/easy-venv.git
-cd easy-venv
-python -m easy_venv -p /path/to/project
+git clone https://github.com/snacktimepro/skello.git
+cd skello
+python -m skello -p /path/to/project
 ```
 
 ---
 
-## Usage
+## Quick Start
 
-### Basic Usage - The Magic! ✨
+### The Magic Command ✨
 
-Simply run in any directory and Easy-Venv will:
-
-1. Create `.venv` and upgrade pip
-2. Detect and install dependencies from existing files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
-3. (Optional)Scaffold modern project structure if requested
-4. Launch a new shell with everything activated!
+Create a complete, modern Python project instantly:
 
 ```bash
-# Creates venv and launches activated shell
-easy-venv
+# Create everything - the full skeleton!
+skello -c *
+# or use the longer form
+skello -c all
 
-# Work on any project from anywhere
-easy-venv -p /path/to/my/project
+# Result: Complete project structure ready to go!
+📁 MyProject/
+  📁 src/
+    📁 myproject/
+      📄 __init__.py
+      📄 main.py
+  📁 tests/
+    📄 __init__.py
+    📄 test_main.py
+  📄 pyproject.toml
+  📄 README.md
+  📄 LICENSE
+  📄 CHANGELOG.md
+  📄 .gitignore
+  📄 .venv/ (activated and ready!)
 ```
 
-### Project Scaffolding - The Real Power! 🏗️
-
-Create complete, modern Python projects instantly:
+### Power User Examples
 
 ```bash
-# Create a complete modern Python project (power user style)
-easy-venv -c *
-# → Creates: pyproject.toml, .gitignore, README.md, CHANGELOG.md, LICENSE, and venv!
+# Complete new project with custom name
+skello -p ~/my-awesome-api -c *
 
-# Ultra-short power user combinations
-easy-venv -c p g l          # pyproject, gitignore, license
-easy-venv -c l g c          # license, gitignore, changelog
-easy-venv -c p md c         # pyproject, readme, changelog
+# Quick skeleton with specific files
+skello -c full g read lic            # Full structure + gitignore, readme, license
 
-# Medium-length for readability
-easy-venv -c toml git lic   # same as above but clearer
-easy-venv -c lic git log    # license, gitignore, changelog
+# Just add structure to existing project
+skello -c main                       # Add src/package structure only
 
-# Full names for ultimate clarity
-easy-venv -c pyproject gitignore license
+# Custom license with your name
+skello -c l:mit:John Doe            # MIT license with John Doe
 
-# Mix and match styles as you prefer
-easy-venv -p ~/my-project -n dev -c *
-```
-
-### Advanced Usage
-
-```bash
-# Legacy requirements.txt support
-easy-venv -c r g            # requirements, gitignore (short)
-easy-venv -c req git        # requirements, gitignore (medium)
-
-# Custom project path with specific files
-easy-venv -p ~/projects/web-app -c p md l    # pyproject, readme, license
-
-# Skip auto-shell launch for automation
-easy-venv -c * -s           # all files, no shell
-
-# Just create venv without any files
-easy-venv -p ~/existing-project
+# Custom requirements file name
+skello -c r:dev-requirements.txt    # Named requirements file
 ```
 
 ---
 
-## Command-Line Options
+## Command Reference
 
-| Option            | Short | Default                 | Description                                             |
-| ----------------- | ----- | ----------------------- | ------------------------------------------------------- |
-| `--path`          | `-p`  | `.` (current directory) | Target directory for the virtual environment and files  |
-| `--name`          | `-n`  | `.venv`                 | Name of the virtual environment folder                  |
-| `--create`        | `-c`  | None                    | Create project files (see options below)                |
-| `--no-auto-shell` | `-s`  | False                   | Skip automatically launching an activated shell session |
-| `--help`          | `-h`  | -                       | Show help message and exit                              |
+```bash
+skello [OPTIONS]
 
-### Project File Creation Options
+Options:
+  -p, --path PATH          Target directory (default: current directory)
+  -n, --name NAME          Virtual environment name (default: .venv)
+  -c, --create FILES       Create project files and structure
+  -s, --no-auto-shell      Skip launching activated shell
+  -h, --help              Show help and exit
+```
 
-| Short | Medium | Creates              | Description                        |
-| ----- | ------ | -------------------- | ---------------------------------- |
-| `p`   | `toml` | `pyproject.toml`     | Modern Python package config       |
-| `r`   | `req`  | `requirements.txt`   | Legacy pip requirements            |
-| `g`   | `git`  | `.gitignore`         | Git ignore rules for Python        |
-| `md`  | `read` | `README.md`          | Project documentation              |
-| `ch`  | `log`  | `CHANGELOG.md`       | Keep a Changelog format            |
-| `l`   | `lic`  | `LICENSE`            | MIT license with current year      |
-| `m`   | `main` | `main.py`            | Creates Python package layout      |
-| `f`   | `full` | `main.py + tests.py` | Creates Full Python package layout |
-| `*`   | `all`  | All modern files     | Everything except requirements     |
+### File Creation Options
+
+| Short | Long   | Creates            | Description                    |
+| ----- | ------ | ------------------ | ------------------------------ |
+| `r`   | `req`  | `requirements.txt` | Pip requirements file          |
+| `p`   | `toml` | `pyproject.toml`   | Modern Python packaging config |
+| `g`   | `git`  | `.gitignore`       | Python-focused git ignores     |
+| `md`  | `read` | `README.md`        | Project documentation          |
+| `ch`  | `log`  | `CHANGELOG.md`     | Structured changelog           |
+| `l`   | `lic`  | `LICENSE`          | MIT license (current year)     |
+
+### Structure Templates
+
+| Option | Creates | Description                         |
+| ------ | ------- | ----------------------------------- |
+| `m`    | `main`  | `src/package/main.py` structure     |
+| `f`    | `full`  | Complete structure with tests       |
+| `*`    | `all`   | Everything - files + full structure |
+
+### Advanced Options
+
+```bash
+# Custom license types and names
+skello -c l:apache:Your Name        # Apache license
+skello -c l:mit:Jane Smith          # MIT with custom name
+
+# Custom file names
+skello -c r:dev-requirements.txt    # Named requirements file
+```
 
 ---
 
 ## Real-World Examples
 
-### Scenario 1: Brand New Project - Full Setup
+### Brand New Project - Complete Setup
 
 ```bash
-# Create everything for a new Python project (power user)
-mkdir my-awesome-app
-easy-venv -p my-awesome-app -c *
+mkdir my-web-api
+skello -p my-web-api -c *
 
-# Same thing with readable medium style
-easy-venv -p my-awesome-app -c toml git read log lic
-
-# Result: Complete project with:
-# ✅ Virtual environment (.venv)
-# ✅ Modern packaging (pyproject.toml)
-# ✅ Git ignore (.gitignore)
-# ✅ Documentation (README.md)
-# ✅ Changelog (CHANGELOG.md)
-# ✅ License (LICENSE)
-# ✅ Activated shell ready to go!
+# 🎉 Result: Full project structure with:
+# ✅ src/my_web_api/ package structure
+# ✅ tests/ directory with test files
+# ✅ Modern pyproject.toml configuration
+# ✅ Professional README.md
+# ✅ MIT LICENSE
+# ✅ .gitignore for Python
+# ✅ CHANGELOG.md ready for releases
+# ✅ Virtual environment activated!
 ```
 
-### Scenario 2: Existing Project - Just Environment
+### Existing Project - Add Structure
 
 ```bash
-# Setup venv for existing project with dependencies
-easy-venv -p ~/projects/existing-app
-# → Detects pyproject.toml/requirements.txt, installs deps, activates
+# Add modern structure to legacy project
+cd my-old-project
+skello -c main toml git
+
+# Adds src/ structure + pyproject.toml + .gitignore
+# Keeps all existing files safe
 ```
 
-### Scenario 3: Selective File Creation
+### Selective Enhancement
 
 ```bash
-# Just add missing essentials to existing project (power user)
-easy-venv -p ~/my-project -c l g          # license, gitignore
+# Add just the essentials
+skello -c read lic git              # Documentation + license + gitignore
 
-# Add modern packaging to legacy project (medium style)
-easy-venv -p ~/old-project -c toml        # pyproject.toml
-
-# Create documentation files only (mixed styles)
-easy-venv -p ~/my-lib -c md log           # readme, changelog
+# Add testing structure
+skello -c full                      # Complete src/ and tests/ structure
 ```
 
-### Scenario 4: Multiple Environments
+### Team Development
 
 ```bash
-# Different environments for same project
-easy-venv -p ~/my-project -n dev -c p     # pyproject only
-easy-venv -p ~/my-project -n test -c r    # requirements only
-easy-venv -p ~/my-project -n prod         # just venv
-```
+# Standardized team setup
+skello -p ~/projects/team-app -c * -n dev
 
-### Scenario 5: CI/CD and Automation
-
-```bash
-# Automated setup without shell launch
-easy-venv -p /path/to/project -c * -s     # all files, no shell
-
-# Just environment setup for containers
-easy-venv -s                              # venv only, no shell
+# Custom license for organization
+skello -c l:apache:"Acme Corp" -c *
 ```
 
 ---
 
-## What Easy-Venv Does
+## What Skello Does
 
-1. **🎯 Validates** the target directory exists and is accessible
-2. **🌱 Creates** a virtual environment (skips if already exists)
-3. **🔧 Upgrades** pip to the latest version
-4. **📝 Creates** project files (only if specified and don't exist)
-5. **📦 Detects** dependency files (`pyproject.toml`, `requirements.txt`, `Pipfile`, etc.)
-6. **⬇️ Installs** dependencies from detected files (if present and not empty)
-7. **🚀 Launches** a new shell session with the environment activated and correct directory!
+When you run Skello, here's the magic that happens:
 
----
+1. **🎯 Validates** your target directory and permissions
+2. **🏗️ Creates** complete folder structure (`src/`, `tests/` with proper `__init__.py` files)
+3. **📝 Generates** all requested project files with professional templates
+4. **🌱 Sets up** virtual environment (if needed)
+5. **🔧 Upgrades** pip to latest version
+6. **📦 Detects** and installs existing dependencies (`pyproject.toml`, `requirements.txt`, etc.)
+7. **🚀 Launches** activated shell in your new project directory
 
-## Smart Project File Logic
-
-Easy-Venv makes intelligent decisions about file creation:
-
-### Dependency File Priority
-
-1. **`pyproject.toml`** - Modern Python packaging standard (preferred)
-2. **`requirements.txt`** - Legacy pip requirements (for compatibility)
-3. **`Pipfile`** - Pipenv format
-4. **Other formats** - Additional formats as detected
-
-### Smart Behaviors
-
--   **Prevents conflicts**: Won't create `requirements.txt` if creating `pyproject.toml`
--   **Respects existing**: Never overwrites existing files
--   **Modern by default**: `*` and `all` create `pyproject.toml`, not `requirements.txt`
--   **Clear messaging**: Explains why files are created or skipped
+**Ready to code in seconds, not minutes!**
 
 ---
 
-## Example Sessions
+## Generated Project Structure
 
-### Complete New Project Setup
+### Full Structure (`skello -c *` or `skello -c all`)
 
-```bash
-$ easy-venv -p ~/my-new-api -c all
-
-🎯 Target directory: /home/user/my-new-api
-🌱 Creating virtual environment in '/home/user/my-new-api/.venv'...
-🔧 Upgrading pip...
-📝 Created project files: pyproject.toml, .gitignore, README.md, CHANGELOG.md, LICENSE
-
-🎉 Setup complete!
-🚀 Automatically launching activated shell session...
-🎉 Virtual environment activated in new shell!
-📁 Current directory: /home/user/my-new-api
-🐍 Virtual environment: /home/user/my-new-api/.venv
-✨ You can now work in your activated environment. Type 'exit' to return.
-
-(.venv) user@computer:~/my-new-api$ # Ready to code!
+```
+MyProject/
+├── src/
+│   └── myproject/
+│       ├── __init__.py
+│       └── main.py
+├── tests/
+│   ├── __init__.py
+│   └── test_main.py
+├── pyproject.toml          # Modern packaging config
+├── README.md               # Professional documentation
+├── LICENSE                 # MIT license (current year)
+├── CHANGELOG.md            # Structured release notes
+├── .gitignore              # Python-focused ignores
+└── .venv/                  # Activated virtual environment
 ```
 
-### Existing Project with Dependencies
+### File Templates
 
-```bash
-$ easy-venv -p ~/existing-project
+**`pyproject.toml`** - Complete modern Python packaging:
 
-🎯 Target directory: /home/user/existing-project
-🌱 Creating virtual environment in '/home/user/existing-project/.venv'...
-🔧 Upgrading pip...
-📦 Found pyproject.toml - installing dependencies...
-📦 Installing dependencies from pyproject.toml...
-
-🎉 Setup complete!
-🚀 Automatically launching activated shell session...
-(.venv) user@computer:~/existing-project$ # Dependencies installed and ready!
-```
-
----
-
-## Generated File Templates
-
-### pyproject.toml (Modern Standard)
-
--   Complete modern Python packaging configuration
--   Build system setup with hatchling
--   Development dependencies included
+-   Build system with hatchling
+-   Development dependencies
 -   Tool configurations (black, isort, pytest)
--   Ready for `pip install -e .`
+-   Metadata ready for PyPI
 
-### .gitignore (Comprehensive)
+**`README.md`** - Professional project documentation:
 
--   Python-specific ignore patterns
--   Virtual environment exclusions
--   IDE and OS file exclusions
--   Build and distribution ignores
-
-### README.md (Professional)
-
--   Project title with badges
 -   Installation instructions
 -   Usage examples
 -   Contributing guidelines
+-   Badge placeholders
 
-### CHANGELOG.md (Keep a Changelog Format)
+**`src/package/main.py`** - Ready-to-run entry point:
 
--   Semantic versioning ready
--   Organized by release sections
--   Standard change categories
+-   Professional docstring
+-   Example function with docstring
+-   `if __name__ == "__main__"` pattern
 
-### LICENSE (MIT with Current Year)
+**`tests/test_main.py`** - Testing foundation:
 
--   MIT license text
--   Current year automatically inserted
--   Placeholder for author name
+-   Pytest-ready test structure
+-   Example test cases
+-   Proper imports from your package
 
 ---
 
-## Error Handling & Safety
+## Smart Behaviors
 
-Easy-Venv handles edge cases gracefully:
+### Dependency Detection
 
--   **Missing target directory**: Clear error message with path validation
--   **File conflicts**: Never overwrites existing files, shows what was skipped
--   **Invalid file options**: Validates create options and shows available choices
--   **Empty dependency files**: Informative message, skips installation
--   **Existing virtual environment**: Skips creation, proceeds with other steps
--   **Permission issues**: Clear error messages with suggested solutions
--   **Shell launch failures**: Falls back to manual activation instructions
+Skello automatically finds and installs from:
+
+1. **`pyproject.toml`** (modern standard - preferred)
+2. **`requirements.txt`** (legacy format)
+3. **`Pipfile`** (Pipenv format)
+4. Other detected formats
+
+### Safe File Creation
+
+-   **Never overwrites** existing files
+-   **Explains** what was created vs. skipped
+-   **Validates** all inputs before making changes
+-   **Handles** permission issues gracefully
+
+### Modern Defaults
+
+-   Prefers `pyproject.toml` over `requirements.txt`
+-   Creates `src/` layout (not flat structure)
+-   Includes `tests/` directory with proper structure
+-   Uses current year in LICENSE files
 
 ---
 
@@ -345,93 +304,93 @@ Easy-Venv handles edge cases gracefully:
 
 ### Windows
 
--   **PowerShell**: Full support with colored output and proper activation
--   **Command Prompt**: Alternative batch scripts when needed
--   **Path Handling**: Automatic Windows path formatting
+-   **PowerShell**: Full support with colors and proper activation
+-   **Command Prompt**: Fallback batch scripts
+-   **Path handling**: Automatic Windows path conversion
 
 ### macOS/Linux
 
--   **Bash/Zsh**: Native shell integration with `exec` for seamless experience
--   **Permissions**: Proper executable permissions on scripts
--   **Symbolic Links**: Full support for linked directories
+-   **Bash/Zsh**: Native shell integration with `exec`
+-   **Permissions**: Proper executable permissions
+-   **Symbolic links**: Full support for linked directories
 
 ---
 
 ## Tips & Best Practices
 
-### 🎯 **Workflow Tips**
+### 🚀 **Getting Started**
 
--   **Complete setup**: Use `easy-venv -c all` for new projects
--   **Selective creation**: Add missing files to existing projects with specific flags
--   **Modern standards**: Prefer `pyproject` over `requirements` for new projects
--   **Remote management**: Keep Easy-Venv installed globally, work on projects anywhere
+-   Use `skello -c *` (or `skello -c all`) for new projects - creates everything you need
+-   Keep Skello installed globally for instant access anywhere
+-   Let Skello handle the tedious setup so you can focus on coding
 
-### 📁 **Organization Tips**
+### 📁 **Project Organization**
 
--   **Consistent structure**: Use `all` for uniform project layouts
--   **Documentation first**: Always include `readme` and `license`
--   **Version control ready**: Include `gitignore` from the start
--   **Professional setup**: Add `changelog` for release tracking
+-   The `src/` layout keeps your package code organized
+-   `tests/` directory follows Python testing conventions
+-   Modern `pyproject.toml` replaces old `setup.py` approach
 
-### 🚀 **Power User Tips**
+### 🎯 **Workflow Integration**
 
--   **Automation friendly**: Use `-s` flag in scripts and CI/CD
--   **Quick iterations**: `easy-venv -c pyproject && code .` for instant development
--   **Batch processing**: Set up multiple projects with shell loops
--   **Template projects**: Create template directories and scaffold them with Easy-Venv
+-   Use `-s` flag in CI/CD scripts to skip shell activation
+-   Combine with your editor: `skello -c * && code .`
+-   Create template projects and enhance them with Skello
+
+### 🤝 **Team Development**
+
+-   Standardize team projects with `skello -c *`
+-   Use custom license names for organization projects
+-   Share the command that created your project structure
 
 ---
 
-## Why This Approach Rocks
+## Error Handling
 
-### Traditional Way (Multiple Commands)
+Skello handles edge cases gracefully:
+
+-   **Missing directories**: Clear validation with helpful messages
+-   **File conflicts**: Never overwrites, shows what was skipped
+-   **Permission issues**: Informative error messages with solutions
+-   **Invalid options**: Validates inputs and shows available choices
+-   **Existing environments**: Skips creation, continues with setup
+-   **Empty dependency files**: Informative skip messages
+
+---
+
+## The Skello Advantage
+
+### Traditional Way (10+ commands, 10+ minutes)
 
 ```bash
 mkdir my-project && cd my-project
+mkdir src tests
+mkdir src/my_project
+touch src/my_project/__init__.py src/my_project/main.py
+touch tests/__init__.py tests/test_main.py
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Unix: source .venv/bin/activate
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install --upgrade pip
-# Create pyproject.toml manually...
-# Create .gitignore manually...
-# Create README.md manually...
-# Create LICENSE manually...
-# ...5-10 minutes later you can start coding
+# Manually create pyproject.toml...
+# Manually create README.md...
+# Manually create .gitignore...
+# Manually create LICENSE...
+# ...finally ready to code after 5-10 minutes
 ```
 
-### Easy-Venv Way (One Command)
+### The Skello Way (1 command, 10 seconds)
 
 ```bash
-easy-venv -p my-project -c *
-# 🎉 Done! Activated shell, all files created, ready to code in 10 seconds
+skello -p my-project -c *
+# 🎉 Complete project structure, activated environment, ready to code!
 ```
-
-### The Best Part: It's All Optional!
-
--   **Just need a venv?** → `easy-venv`
--   **Need project files?** → `easy-venv -c *`
--   **Existing project?** → `easy-venv -p existing-project`
--   **Specific files only?** → `easy-venv -c l g` (license, gitignore)
--   **Automation script?** → `easy-venv -c * -s`
 
 ---
 
 ## Requirements
 
 -   **Python 3.7+** (no external dependencies!)
--   **PowerShell** (Windows) or **Bash** (macOS/Linux)
--   **Pip** (included with Python)
-
----
-
-## Installation Methods Summary
-
-| Method             | Command                      | Use Case             |
-| ------------------ | ---------------------------- | -------------------- |
-| **Global Install** | `pip install -e .`           | Best for daily use   |
-| **User Install**   | `pip install -e . --user`    | No admin permissions |
-| **Virtual Env**    | `pip install -e .` (in venv) | Development/testing  |
-| **Direct Run**     | `python -m easy_venv`        | One-time use         |
+-   **PowerShell** (Windows) or **Bash/Zsh** (macOS/Linux)
+-   **Git** (optional, for cloning)
 
 ---
 
@@ -443,35 +402,35 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+Contributions welcome! Please feel free to submit a Pull Request.
 
 ### Development Setup
 
 ```bash
-git clone https://github.com/snacktimepro/easy-venv.git
-cd easy-venv
-easy-venv -c all  # Use Easy-Venv to set up Easy-Venv! 🎉
+git clone https://github.com/snacktimepro/skello.git
+cd skello
+skello -c *  # Use Skello to set up Skello! 🎉
 ```
 
 ---
 
 ## Support
 
-If you encounter any issues:
+Having issues?
 
-1. **Check the help**: `easy-venv -h`
-2. **Review examples**: Common patterns above
-3. **Check permissions**: Run as administrator on Windows if needed
-4. **Open an issue**: Include your OS, Python version, and error message
+1. **Check help**: `skello -h`
+2. **Review examples**: See patterns above
+3. **Check permissions**: May need admin on Windows
+4. **Open issue**: Include OS, Python version, error message
 
 ---
 
 ## Changelog
 
-See [CHANGELOG.md](./CHANGELOG.md) for a full list of changes.
+See [CHANGELOG.md](./CHANGELOG.md) for version history.
 
 ---
 
-_Made with ❤️ to make Python development setup effortless_
+_Made with ❤️ to make Python project setup effortless_
 
-**From zero to fully-configured Python project in seconds! 🚀**
+**From empty directory to fully-structured Python project in seconds! 🚀**

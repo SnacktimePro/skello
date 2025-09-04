@@ -1,4 +1,4 @@
-"""Shell launching utilities for easy-venv."""
+"""Shell launching utilities for skello."""
 
 import shlex
 import subprocess

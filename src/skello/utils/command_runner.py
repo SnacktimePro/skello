@@ -1,4 +1,4 @@
-"""Utility classes and functions for easy-venv."""
+"""Utility classes and functions for skello."""
 
 import subprocess
 import sys

@@ -12,6 +12,7 @@ class LicenseHelper:
             'template': 'LICENSE_MIT.tmpl',
             'classifier': 'MIT License',
             'name': 'MIT License',
+            'spdx': 'MIT',
             'patterns': [
                 r'mit license',
                 r'permission is hereby granted,?\s*free of charge',
@@ -24,6 +25,7 @@ class LicenseHelper:
             'template': 'LICENSE_APACHE.tmpl', 
             'classifier': 'Apache Software License',
             'name': 'Apache License 2.0',
+            'spdx': 'Apache-2.0',
             'patterns': [
                 r'apache\s+license',
                 r'version\s+2\.0',
@@ -37,6 +39,7 @@ class LicenseHelper:
             'template': 'LICENSE_BSD.tmpl',
             'classifier': 'BSD License',
             'name': 'BSD 3-Clause License',
+            'spdx': 'BSD-3-Clause',
             'patterns': [
                 r'bsd\s+(3-clause|three-clause|\d-clause)',
                 r'redistribution and use in source and binary forms',
@@ -49,6 +52,7 @@ class LicenseHelper:
             'template': 'LICENSE_GPL.tmpl',
             'classifier': 'GNU General Public License v3 (GPLv3)',
             'name': 'GNU General Public License v3.0',
+            'spdx': 'GPL-3.0-or-later',
             'patterns': [
                 r'gnu general public license',
                 r'this program is free software',
@@ -62,6 +66,7 @@ class LicenseHelper:
             'template': 'LICENSE_LGPL.tmpl',
             'classifier': 'GNU Lesser General Public License v3 (LGPLv3)',
             'name': 'GNU Lesser General Public License v3.0',
+            'spdx': 'LGPL-3.0-or-later',
             'patterns': [
                 r'gnu lesser general public license',
                 r'lgpl\s*v?3',
@@ -73,6 +78,7 @@ class LicenseHelper:
             'template': 'LICENSE_MPL.tmpl',
             'classifier': 'Mozilla Public License 2.0 (MPL 2.0)',
             'name': 'Mozilla Public License 2.0',
+            'spdx': 'MPL-2.0',
             'patterns': [
                 r'mozilla public license',
                 r'mpl\s*2\.0',
@@ -84,6 +90,7 @@ class LicenseHelper:
             'template': 'LICENSE_UNLICENSE.tmpl',
             'classifier': 'The Unlicense (Unlicense)',
             'name': 'The Unlicense',
+            'spdx': 'Unlicense',
             'patterns': [
                 r'this is free and unencumbered software',
                 r'released into the public domain',
@@ -92,6 +99,12 @@ class LicenseHelper:
             ]
         }
     }
+
+    @classmethod
+    def get_spdx_license(cls, license_type: str) -> str:
+        """Get SPDX license identifier for a license type."""
+        license_info = cls.get_license_info(license_type)
+        return license_info['spdx']
     
     @classmethod
     def parse_license_spec(cls, license_spec: str = 'mit') -> tuple[str, str]:
@@ -136,13 +149,13 @@ class LicenseHelper:
     @classmethod
     def detect_license(cls, target_dir: Path) -> str:
         """
-        Detects license type from an existing LICENSE file and returns the classifier.
+        Detects license type from an existing LICENSE file and returns the LICENSE_TYPE.
         
         Args:
             target_dir: Directory to check for LICENSE file
             
         Returns:
-            Detected license classifier
+            Detected license type (e.g., 'mit', 'apache', etc.)
         """
         for license_filename in ['LICENSE', 'LICENSE.txt', 'LICENSE.md', 'COPYING']:
             license_file = target_dir / license_filename
@@ -153,12 +166,12 @@ class LicenseHelper:
                     # Use pattern-based detection
                     detected_type = cls._analyze_license_content(license_content)
                     if detected_type:
-                        return cls.LICENSE_TYPES[detected_type]['classifier']
+                        return detected_type
                         
                 except Exception as e:
                     print(f"Error reading {license_file}: {e}")
         
-        return cls.LICENSE_TYPES['mit']['classifier']  # Default fallback
+        return 'mit'  # Default fallback
     
     @classmethod
     def _analyze_license_content(cls, content: str) -> Optional[str]:

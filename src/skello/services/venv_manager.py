@@ -1,10 +1,10 @@
-"""Virtual environment management for easy-venv."""
+"""Virtual environment management for skello."""
 
 import venv
 from pathlib import Path
 from typing import Optional
 
-from .utils import CommandRunner, get_python_executable
+from ..utils.command_runner import CommandRunner, get_python_executable
 
 
 class VirtualEnvironmentManager:

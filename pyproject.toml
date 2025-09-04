@@ -1,16 +1,17 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
-name = "easy-venv"
-version = "2.0.2"
+name = "skello"
+version = "2.1.0"
 authors = [
     {name = "SnacktimePro", email = "no-reply@example.com"},
 ]
-description = "A complete Python project initialization tool - create virtual environments, install dependencies, and scaffold modern project structure in seconds!"
-readme = "README.md"
+description = "The friendliest way to bootstrap modern Python projects — from zero to fully-structured, ready-to-code skeleton in seconds! 🚀"
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "MIT"}
+license-files = ["LICENSE"]
 requires-python = ">=3.7"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -25,10 +26,11 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Installation/Setup",
     "Topic :: Utilities",
 ]
-keywords = ["virtual-environment", "venv", "python", "development", "automation", "pip"]
+keywords = ["virtual-environment", "venv", "python", "project", "bootstrap", "skeleton", "automation", "development", "pip"]
 dependencies = []
 
 [project.optional-dependencies]
@@ -40,19 +42,19 @@ dev = [
 ]
 
 [project.scripts]
-easy-venv = "easy_venv.cli:main"
+skello = "skello.core.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-easy_venv = ["templates/*"]
+skello = ["templates/*"]
 
 [project.urls]
-"Homepage" = "https://github.com/SnacktimePro/easy-venv"
-"Bug Reports" = "https://github.com/SnacktimePro/easy-venv/issues"
-"Source" = "https://github.com/SnacktimePro/easy-venv"
-"Documentation" = "https://github.com/SnacktimePro/easy-venv#readme"
+"Homepage" = "https://github.com/SnacktimePro/skello"
+"Bug Reports" = "https://github.com/SnacktimePro/skello/issues"
+"Source" = "https://github.com/SnacktimePro/skello"
+"Documentation" = "https://github.com/SnacktimePro/skello#readme"
 
 [tool.black]
 line-length = 88

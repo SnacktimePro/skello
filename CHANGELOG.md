@@ -7,7 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
-## 2.03 - 2025-09-03
+## [2.1.0] - Rebrand to Skello 2025-09-04
+
+-   I've officially rebranded the project from **easy-venv** to **Skello**! 🎉
+
+-   This change reflects the evolution of the project: what started as a simple `.venv` helper has now grown into a **full mini Python skeleton generator**. Skello now instantly creates:
+
+    -   A ready-to-code folder structure (`src/`, `tests/`)
+    -   Essential project files (`pyproject.toml`, `README.md`, `LICENSE`, `CHANGELOG.md`, `.gitignore`)
+    -   Optional activated virtual environment
+
+-   Skello emphasizes a **friendly, approachable, zero-configuration way** to kickstart modern Python projects, making setup faster and easier than ever.
+
+-   All existing functionality remains intact — just a new, memorable name that better reflects the expanded scope and capabilities of the tool.
+
+### Added
+
+-   **DirectoryValidator** (Validates the target directory for project setup)
+    -   Check if there's sufficient disk space.
+    -   Get a formatted summary of validation results.
+-   **TemplateManager** (Manages template loading)
+    -   Map template categories to subdirectories
+    -   Load and process template with variable substitution
+
+### Changed
+
+-   **command_runner** (file name change from `utils`)
+
+## [2.0.3] - 2025-09-03
 
 ### Added
 
@@ -57,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   `src/easy_venv/models/config.py` - No longer need with cli_handler.py
 
-## 2.02 - 2025-09-02
+## [2.0.2] - 2025-09-02
 
 ### Added
 

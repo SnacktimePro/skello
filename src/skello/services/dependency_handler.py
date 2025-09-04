@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from .directory_snapshot import DirectorySnapshot
-from .utils import CommandRunner
+from ..utils.directory_snapshot import DirectorySnapshot
+from ..utils.command_runner import CommandRunner
 from .venv_manager import VirtualEnvironmentManager
 
 

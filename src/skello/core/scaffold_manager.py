@@ -1,3 +1,5 @@
+"""Scaffold management for skello."""
+
 import string
 import textwrap
 from typing import Dict, List, Tuple
@@ -5,16 +7,17 @@ from importlib import resources
 from pathlib import Path
 from datetime import datetime, date
 
-from .license_helper import LicenseHelper
 from .models.scaffolding_types import FileType, FileRequest, StructureTemplate
 from .models.scaffold_context import ScaffoldContext
+from ..utils.license_helper import LicenseHelper
+from ..templates.template_manager import TemplateManager
 
 
 class ScaffoldManager:
     """Creates project scaffolding from a finalized plan."""
 
     def __init__(self):
-        self.templates_dir = resources.files('easy_venv').joinpath('templates')
+        self.template_manager = TemplateManager()
 
     def execute_plan(self, context: ScaffoldContext) -> None:
         """Execute the complete scaffolding plan."""
@@ -175,31 +178,34 @@ class ScaffoldManager:
     def _build_pyproject_sections(self, context: ScaffoldContext) -> Dict:
         """Build pyproject.toml sections based on final context state."""
         # Determine license classifier
-        license_type = context.license_type()
-        classifier = (LicenseHelper.get_license_info(license_type)['classifier'] if license_type 
-                      else LicenseHelper.detect_license(context.target_dir)
-        )
+        license_type = context.license_type() or LicenseHelper.detect_license(context.target_dir)
+        spdx_license = LicenseHelper.get_spdx_license(license_type)
 
         sections = {
             'project_name': context.project_name,
-            'license_classifier': classifier,
         }
 
         # README section
         has_readme = (context.directory_snapshot.file_exists("README.md") or 
-                     context.has_file_to_create(FileType.README))
+                    context.has_file_to_create(FileType.README))
         sections['readme_section'] = (
-            'readme = "README.md"' if has_readme 
-            else '# readme = "README.md"  # Uncomment when you add a README'
-        )
-        
+            textwrap.dedent('''
+            readme = {file = "README.md", content-type = "text/markdown"}''') if has_readme 
+            else textwrap.dedent('''
+            # readme = {file = "README.md", content-type = "text/markdown"}  # Uncomment when you add a README''')
+        ).strip()
+
         # LICENSE section  
         has_license = (context.directory_snapshot.file_exists("LICENSE") or 
-                      context.has_file_to_create(FileType.LICENSE))
+                    context.has_file_to_create(FileType.LICENSE))
         sections['license_section'] = (
-            'license = {file = "LICENSE"}' if has_license 
-            else '# license = {file = "LICENSE"}  # Uncomment when you add a LICENSE'
-        )
+            textwrap.dedent(f'''
+            license = "{spdx_license}"
+            license-files = ["LICENSE"]''') if has_license 
+            else textwrap.dedent('''
+            # license = {file = "LICENSE"}
+            # license-files = ["LICENSE"]  # Uncomment when you add a LICENSE''')
+        ).strip()
 
         # Helper for commenting sections
         def make_section(text: str, commented: bool = False) -> str:
@@ -277,10 +283,7 @@ class ScaffoldManager:
 
     def _get_template_content(self, filename: str, **kwargs) -> str:
         """Read template file and substitute variables."""
-        template_path = self.templates_dir / filename
-        template_content = template_path.read_text(encoding='utf-8')
-        template = string.Template(template_content)
-        return template.safe_substitute(**kwargs)
+        return self.template_manager.get_template_content(filename, **kwargs)
 
     def _write_file(self, file_path: Path, content: str) -> bool:
         """Write content to file with error handling."""

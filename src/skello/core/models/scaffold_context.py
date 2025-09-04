@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Optional, Set
 
 from .scaffolding_types import FileRequest, FileType, StructureTemplate
-from ..directory_snapshot import DirectorySnapshot
+from ...utils.directory_snapshot import DirectorySnapshot
 
 
 @dataclass(frozen=True)
