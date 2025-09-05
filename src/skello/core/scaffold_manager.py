@@ -247,7 +247,8 @@ class ScaffoldManager:
             {context.project_name} = "{context.project_package}.main:cli"
                                         
             [tool.hatch.build.targets.wheel]
-            packages = ["src/{context.project_package}"]
+            sources = ["src"]
+            only-include = ["src/{context.project_package}"]
         ''').strip()
         
         has_src = (context.directory_snapshot.has_src_layout or 

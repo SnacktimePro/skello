@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skello"
-version = "2.1.1"
+version = "2.1.4"
 authors = [
     {name = "SnacktimePro", email = "no-reply@example.com"},
 ]
@@ -44,11 +44,8 @@ dev = [
 skello = "skello.core.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/skello"]
-include = ["skello/templates/*"]
-
-[tool.hatch.build.targets.sdist]
-include = ["skello/templates/*"]
+sources = ["src"]
+only-include = ["src/skello"]
 
 [project.urls]
 "Homepage" = "https://github.com/SnacktimePro/skello"
