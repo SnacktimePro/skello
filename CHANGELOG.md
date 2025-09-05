@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.4] - 2025-09-05
 
+### Added
+
+-   Skello is now available on PyPI 🎉
+    -   Users can install with a simple pip install skello
+    -   Updates can be applied via pip install --upgrade skello
+
+### Updated
+
+-   Installation documentation:
+    -   Primary method → PyPI installation
+    -   Alternative method → Development install from source (for contributors/bleeding edge users)
+
 ### Fixed
 
 -   Fixed PyPI distribution packaging issue that prevented CLI from working when installed via pip

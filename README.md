@@ -37,24 +37,24 @@ Starting a new Python project shouldn't take 10+ minutes of setup. You know the 
 
 ## Installation
 
-### Recommended: Global Installation
+### Recommended: Install from PyPI
 
-Install once, use anywhere:
+Install directly from PyPI - simple and always up-to-date:
+
+```bash
+pip install skello
+```
+
+Now use `skello` command from anywhere on your system!
+
+### Alternative: Development Installation
+
+For the latest development version or to contribute:
 
 ```bash
 git clone https://github.com/snacktimepro/skello.git
 cd skello
 pip install -e .
-```
-
-Now use `skello` command from anywhere on your system!
-
-### Alternative: Direct Usage
-
-```bash
-git clone https://github.com/snacktimepro/skello.git
-cd skello
-python -m skello -p /path/to/project
 ```
 
 ---
