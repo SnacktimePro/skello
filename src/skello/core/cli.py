@@ -13,7 +13,7 @@ from .scaffold_manager import ScaffoldManager
 from ..services.venv_manager import VirtualEnvironmentManager
 from ..services.dependency_handler import DependencyHandler
 from ..services.shell_launcher import ShellLauncher
-from ..utils.directory_validator import DirectoryValidator
+from ..utils.directory_validator import DirectoryValidationError, DirectoryValidator
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,16 +84,14 @@ def parse_args() -> argparse.Namespace:
 def main():
     """Main CLI entry point."""
     args = parse_args()
-    
-    # Create project context from CLI args
     target_path = Path(args.path).resolve()
-    dir_validator = DirectoryValidator(target_path)
-    # Validate target directory before proceeding
-    if not dir_validator.validate_target_directory():
-        print(dir_validator.get_validation_summary())
-        return 1
-
-    cli_handler = CLIHandler.from_cli(target_path, args.create)
+    try:
+        # Create project context from CLI args
+        cli_handler = CLIHandler.from_cli(target_path, args.create)
+    except DirectoryValidationError as e:
+        print(f"❌ {e}")
+        exit(1)
+    
     print(f"🎯 Target directory: {cli_handler.target_dir}")
 
     # Scaffold project if specifications provided

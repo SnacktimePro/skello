@@ -48,9 +48,7 @@ class DependencyHandler:
         print(f"📦 Found pyproject.toml - installing project in editable mode...")
         
         try:
-            # First install build dependencies
-            self.venv_manager.run_in_venv(["-m", "pip", "install", "build"])
-            # Then install the project in editable mode
+            # Install the project in editable mode
             self.venv_manager.run_in_venv(["-m", "pip", "install", "-e", "."])
         except Exception as e:
             print(f"⚠️  Warning: Failed to install from pyproject.toml. Trying pip install anyway...")

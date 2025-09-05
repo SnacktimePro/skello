@@ -45,7 +45,7 @@ class TemplateManager:
     def _template_exists(self, template_path: Path) -> bool:
         """Check if template file exists."""
         try:
-            template_path.read_text()
+            template_path.read_text(encoding='utf-8')
             return True
         except (FileNotFoundError, IsADirectoryError):
             return False

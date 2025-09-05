@@ -5,7 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# Changelog
+## [Unreleased]
+
+## [2.1.1] - 2025-09-05
+
+### Enhanced
+
+-   **DirectoryValidator**: Enhanced existing validator with package name conflict detection
+    -   Added `RESERVED_PACKAGE_NAMES` set to detect problematic package names
+    -   Added `validate_package_name()` method that returns safe alternatives instead of just boolean validation
+    -   Enhanced validation to automatically suggest `package_app`, `package_pkg`, etc. when conflicts detected
+-   **CLIHandler integration**: Integrated DirectoryValidator into the CLI entry point
+    -   Added comprehensive validation to `CLIHandler.from_cli()` method
+    -   Now validates both directory permissions and package name safety upfront
+    -   Automatically fixes problematic package names with user notification
+-   **Error handling**: Improved error handling in CLI workflow
+    -   Added proper exception handling for validation failures
+
+### Fixed
+
+-   **Package name conflicts**: Resolved import shadowing issues with reserved Python names
+    -   Projects named "test", "main", "sys", etc. now automatically use safe alternatives
+    -   Prevents `ModuleNotFoundError` and import conflicts during project execution
+-   **Template compatibility**: Updated scaffolding templates to work correctly with safe package names
+    -   Templates now properly reference the validated package names
+    -   Ensures generated `pyproject.toml` uses correct entry point references
+
+### Changed
+
+-   **Package name behavior**: Package names that conflict with Python built-ins are now automatically renamed
+    -   Example: `Test` project now creates `test_app` package instead of `test`
+    -   Users are notified when package names are changed for safety
+    -   Original project name is preserved, only package directory name is modified
+
+### Developer Notes
+
+-   The DirectoryValidator now serves dual purpose: directory validation + package name safety
+-   Validation occurs at CLI entry point, ensuring all downstream scaffolding uses validated inputs
+-   Template generation automatically receives safe package names, eliminating need for validation elsewhere
+
+### Breaking Changes
+
+-   `CLIHandler.from_cli()` now raises `DirectoryValidationError` for validation failures
+-   Projects with reserved package names will have different package directory names than before
 
 ## [2.1.0] - Rebrand to Skello 2025-09-04
 

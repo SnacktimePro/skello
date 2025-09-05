@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skello"
-version = "2.1.0"
+version = "2.1.1"
 authors = [
     {name = "SnacktimePro", email = "no-reply@example.com"},
 ]
@@ -16,7 +16,6 @@ requires-python = ">=3.7"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
@@ -44,11 +43,12 @@ dev = [
 [project.scripts]
 skello = "skello.core.cli:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/skello"]
+include = ["skello/templates/*"]
 
-[tool.setuptools.package-data]
-skello = ["templates/*"]
+[tool.hatch.build.targets.sdist]
+include = ["skello/templates/*"]
 
 [project.urls]
 "Homepage" = "https://github.com/SnacktimePro/skello"

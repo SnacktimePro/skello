@@ -12,6 +12,7 @@ description = "TODO: Add project description"
 $readme_section
 $license_section
 requires-python = ">=3.9"
+# keywords = ["your", "keywords", "here"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     # "Intended Audience :: Developers",  # Add appropriate audience
@@ -21,13 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = [
-    # TODO: Add your project dependencies here
-    # "requests>=2.28.0",
-]
-# keywords = ["your", "keywords", "here"]
-
-
+$dependency_section
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
@@ -36,10 +31,16 @@ dev = [
     "flake8>=4.0",
 ]
 
+# Build configuration based on project structure
+$build_section
+
 [project.urls]
 Homepage = "https://github.com/YOUR_USERNAME/$project_name"
 Repository = "https://github.com/YOUR_USERNAME/$project_name"
 Issues = "https://github.com/YOUR_USERNAME/$project_name/issues"
+
+# Tests configurations
+$pytest_section
 
 # Tool configurations
 [tool.black]
@@ -49,8 +50,3 @@ target-version = ['py39', 'py310', 'py311', 'py312']
 [tool.isort]
 profile = "black"
 line_length = 88
-
-$pytest_section
-
-# Build configuration based on project structure
-$build_section

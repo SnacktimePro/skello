@@ -183,6 +183,7 @@ class ScaffoldManager:
 
         sections = {
             'project_name': context.project_name,
+            'project_package': context.project_package
         }
 
         # README section
@@ -224,9 +225,27 @@ class ScaffoldManager:
         has_tests = (context.directory_snapshot.has_tests or 
                     context.should_create_tests())
         sections['pytest_section'] = make_section(pytest_section, not has_tests)
+        # Update the dependency section to use pytest
+        if has_tests:
+            sections['dependency_section'] = textwrap.dedent('''
+                dependencies = [
+                    "pytest",
+                ]
+            ''').strip()
+        else:
+            sections['dependency_section'] = textwrap.dedent('''
+                dependencies = [
+                    # TODO: Add your project dependencies here
+                    # "requests>=2.28.0",
+                ]
+            ''').strip()
+    
 
         # Build section
         build_section = textwrap.dedent(f'''
+            [project.scripts]
+            {context.project_name} = "{context.project_package}.main:cli"
+                                        
             [tool.hatch.build.targets.wheel]
             packages = ["src/{context.project_package}"]
         ''').strip()
@@ -242,17 +261,21 @@ class ScaffoldManager:
     def _create_main_structure(self, context: ScaffoldContext) -> Tuple[bool, str]:
         """Create src/package/main.py structure."""
         package_dir = context.target_dir / "src" / context.project_package
+        init_file = package_dir / "__init__.py"
         main_file = package_dir / "main.py"
         
         if main_file.exists():
             return False, "src/main.py structure"
             
         package_dir.mkdir(parents=True, exist_ok=True)
-        (package_dir / "__init__.py").touch()
+        init_content = self._get_template_content('main__init__.py.tmpl', 
+                                                project_name=context.project_package)
+        self._write_file(init_file, init_content)
         
         main_content = self._get_template_content('main.py.tmpl', 
-                                                project_name=context.project_name)
+                                                project_name=context.project_package)
         self._write_file(main_file, main_content)
+       
         
         return True, "src/main.py structure"
         

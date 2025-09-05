@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Set, Tuple
 from .scaffold_context import ScaffoldContext
 from .scaffolding_types import FileRequest, FileType, StructureTemplate
 from ...utils.directory_snapshot import DirectorySnapshot
+from ...utils.directory_validator import DirectoryValidationError, DirectoryValidator
 
 # ==============================================================================
 # CLI Handler - Entry Point
@@ -62,11 +63,31 @@ class CLIHandler:
         name = target_path.name if target_path.name != "." else target_path.resolve().name
         package = name.replace("-", "_").replace(" ", "_").lower()
         
-        # Create handler instance
+        # Create validator for both directory and package validation
+        validator = DirectoryValidator(target_path)
+        
+        # Validate target directory before proceeding
+        if not validator.validate_target_directory():
+            error_summary = validator.get_validation_summary()
+            raise DirectoryValidationError(f"Cannot proceed invalid directory:\n{error_summary}")
+        
+        # [Shadowing issues] Validate and fix package name if needed
+        safe_package = validator.validate_package_name(package)
+        
+        if not safe_package:
+            # This should rarely happen, but handle it gracefully
+            raise ValueError(f"Cannot create safe package name for '{package}'")
+        
+        # Show warning if package name was changed
+        if safe_package != package:
+            print(f"⚠️  Package name '{package}' conflicts with Python built-ins.")
+            print(f"   Using '{safe_package}' instead to avoid import issues.")
+        
+        # Create handler instance with the safe package name
         handler = cls(
             target_dir=target_path,
-            project_name=name,
-            project_package=package
+            project_name=name,  # Keep original project name
+            project_package=safe_package  # Use safe package name
         )
         
         # Parse CLI arguments
